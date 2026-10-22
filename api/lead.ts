@@ -7,7 +7,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
  try {
   if(!await allowRequest(req,'lead')) { res.setHeader('Retry-After','600'); res.status(429).json({error:'rate'}); return; }
   const { visitorId, ...attribution } = lead.attribution;
-  const key=`moni:${attribution.isTest?'test':'live'}:lead:${digest(lead.email)}`;
+  const key=`moni:${attribution.isTest?'test':'live'}:v2:lead:${digest(lead.email)}`;
   const record={...lead,attribution,visitorHash:digest(visitorId),createdAt:new Date().toISOString(),noticeVersion:NOTICE_VERSION,submissions:1};
   await redis(['EVAL',LEAD_SCRIPT,1,key,JSON.stringify(record),RETENTION_SECONDS]);
   // Identical responses avoid revealing whether an address is already registered.

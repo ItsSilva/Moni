@@ -1,7 +1,7 @@
 import { createHmac } from 'node:crypto';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 export const RETENTION_SECONDS = 180 * 86400;
-export const NOTICE_VERSION = 'moni-interest-v1';
+export const NOTICE_VERSION = 'moni-interest-v2';
 type RecordValue = Record<string, unknown>;
 export function object(value: unknown): RecordValue {
  if (!value || typeof value !== 'object' || Array.isArray(value)) throw new Error('invalid');
@@ -21,8 +21,8 @@ export function parseLead(value: unknown) {
  const d = object(value);
  if (typeof d.email !== 'string') throw new Error('invalid');
  const email = d.email.trim().toLowerCase();
- if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || d.adult !== true || d.consent !== true || !['cali','other'].includes(String(d.city)) || !['8-11','12-14','both','outside'].includes(String(d.age)) || !['yes','maybe','no'].includes(String(d.willingness))) throw new Error('invalid');
- return { email, city:d.city as string, age:d.age as string, willingness:d.willingness as string, adult:true, consent:true, eligible:d.city === 'cali' && d.age !== 'outside', attribution:parseAttribution(d.attribution) };
+ if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || d.adult !== true || d.consent !== true || !['cali','other'].includes(String(d.city)) || !['yes','maybe','no'].includes(String(d.willingness))) throw new Error('invalid');
+ return { email, city:d.city as string, willingness:d.willingness as string, adult:true, consent:true, eligible:d.city === 'cali', attribution:parseAttribution(d.attribution) };
 }
 export function digest(value: string) { return createHmac('sha256', process.env.LEAD_HASH_SECRET!).update(value).digest('hex'); }
 export async function redis<T>(command: (string|number)[]): Promise<T> {
@@ -37,13 +37,13 @@ export function begin(req: VercelRequest, res: VercelResponse): RecordValue | nu
  if(req.method !== 'POST') { res.setHeader('Allow','POST'); res.status(405).json({error:'method'}); return null; }
  if (req.headers['sec-fetch-site'] === 'cross-site') { res.status(403).json({error:'origin'}); return null; }
  if (!String(req.headers['content-type']).startsWith('application/json')) { res.status(415).json({error:'content-type'}); return null; }
- if (!process.env.UPSTASH_REDIS_REST_URL?.startsWith('https://') || !process.env.UPSTASH_REDIS_REST_TOKEN || (process.env.LEAD_HASH_SECRET?.length ?? 0) < 32 || !process.env.VITE_DATA_CONTROLLER || !process.env.VITE_CONTACT_EMAIL) { res.status(503).json({error:'not-configured'}); return null; }
+ if (!process.env.UPSTASH_REDIS_REST_URL?.startsWith('https://') || !process.env.UPSTASH_REDIS_REST_TOKEN || (process.env.LEAD_HASH_SECRET?.length ?? 0) < 32 || !process.env.VITE_DATA_CONTROLLER || !/^\S+@[^\s@]+\.[^\s@]+$/.test(process.env.VITE_CONTACT_EMAIL ?? '')) { res.status(503).json({error:'not-configured'}); return null; }
  try {
   if (Buffer.byteLength(typeof req.body === 'string' ? req.body : JSON.stringify(req.body ?? {})) > 8192) { res.status(413).json({error:'too-large'}); return null; }
   return object(typeof req.body === 'string' ? JSON.parse(req.body) : req.body);
  } catch { res.status(400).json({error:'invalid'}); return null; }
 }
-export async function allowRequest(req: VercelRequest, kind: 'lead'|'visit') {
+export async function allowRequest(req: VercelRequest, kind: 'lead'|'visit'|'event') {
  // Only a platform-provided IP is used; raw IP addresses are never stored.
  const ip = String(req.headers['x-vercel-forwarded-for'] ?? req.socket?.remoteAddress ?? 'unknown').split(',')[0];
  const key = `moni:rate:${kind}:${digest(ip)}:${Math.floor(Date.now()/600000)}`;
