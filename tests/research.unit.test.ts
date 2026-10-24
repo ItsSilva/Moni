@@ -23,6 +23,7 @@ describe('research quality',()=>{
  it('isolates test visits and limits UTM size',()=>expect(getAttribution('?variant=bogus&test=1&utm_source='+ 'x'.repeat(300))).toMatchObject({source:'direct',isTest:true,campaign:{utm_source:'x'.repeat(160)}}));
 });
 describe('API behavior',()=>{
+ it('pauses all collection without contacting storage',async()=>{vi.stubEnv('VITE_REGISTRATION_ENABLED','false');const f=vi.fn();vi.stubGlobal('fetch',f);for(const handler of [leadHandler,visitHandler,eventHandler]){const res=response();await handler(request(input()),res as unknown as VercelResponse);expect(res.code).toBe(503);expect(res.body).toEqual({error:'registration-paused'});}expect(f).not.toHaveBeenCalled();});
  it('saves only after validation, with server date, retention and deduplication key',async()=>{
   const fetcher=vi.fn().mockResolvedValueOnce({ok:true,json:async()=>({result:1})}).mockResolvedValueOnce({ok:true,json:async()=>({result:1})});vi.stubGlobal('fetch',fetcher);
   const res=response();await leadHandler(request(input()),res as unknown as VercelResponse);

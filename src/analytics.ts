@@ -2,7 +2,7 @@ import { loadAttribution } from './attribution';
 export const attribution = loadAttribution();
 export const contact = (import.meta.env.VITE_CONTACT_EMAIL || '').trim();
 export const controller = (import.meta.env.VITE_DATA_CONTROLLER || '').trim();
-export const configured = Boolean(controller && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact));
+export const configured = import.meta.env.VITE_REGISTRATION_ENABLED !== 'false' && Boolean(controller && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(contact));
 export type EventName = 'cta_click' | 'form_start' | 'engaged_visit' | 'faq_open';
 export type EventPlacement = 'header' | 'hero' | 'product' | 'form' | 'page' | 'faq';
 const sent = new Set<string>();

@@ -37,6 +37,7 @@ export function begin(req: VercelRequest, res: VercelResponse): RecordValue | nu
  if(req.method !== 'POST') { res.setHeader('Allow','POST'); res.status(405).json({error:'method'}); return null; }
  if (req.headers['sec-fetch-site'] === 'cross-site') { res.status(403).json({error:'origin'}); return null; }
  if (!String(req.headers['content-type']).startsWith('application/json')) { res.status(415).json({error:'content-type'}); return null; }
+ if (process.env.VITE_REGISTRATION_ENABLED === 'false') { res.status(503).json({error:'registration-paused'}); return null; }
  if (!process.env.UPSTASH_REDIS_REST_URL?.startsWith('https://') || !process.env.UPSTASH_REDIS_REST_TOKEN || (process.env.LEAD_HASH_SECRET?.length ?? 0) < 32 || !process.env.VITE_DATA_CONTROLLER || !/^\S+@[^\s@]+\.[^\s@]+$/.test(process.env.VITE_CONTACT_EMAIL ?? '')) { res.status(503).json({error:'not-configured'}); return null; }
  try {
   if (Buffer.byteLength(typeof req.body === 'string' ? req.body : JSON.stringify(req.body ?? {})) > 8192) { res.status(413).json({error:'too-large'}); return null; }

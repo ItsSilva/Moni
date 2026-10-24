@@ -11,6 +11,10 @@ Landing de investigación ajustada a la mentoría del 20 de octubre de 2026 y al
 
 Cambian encabezado, apoyo, principios, orden y copy de beneficios, explicación de la app e invitación al registro. A enfatiza control y acompañamiento; B, aprendizaje y ahorro. Producto, formulario, CTA y condiciones son comunes. Sin selector público A/B ni asignación aleatoria que altere la campaña secuencial. Primero se lanza A; después se pausa su anuncio y se activa B con su URL explícita. Sin variante explícita, se muestra A y el registro se separa como directo. No hay cambio automático por fecha. `?variant=b&test=1` permite una prueba excluida del análisis. Añadir `test=1` a todas las pruebas del equipo.
 
+## Estado del despliegue
+
+Proyecto Vercel **moni**, espacio **itssilvas-projects**, vinculado a `ItsSilva/Moni`. Dirección asignada: https://moni-sigma-eight.vercel.app. Contacto confirmado: **monibank.proyecto@gmail.com**. El almacenamiento Redis sigue pendiente de conectar y verificar; la captación está pausada mediante `VITE_REGISTRATION_ENABLED=false`. Esta pausa conserva visible el contacto y deshabilita el envío y la medición, también en los endpoints. No iniciar Meta Ads hasta completar la prueba real de guardado.
+
 ## Desplegar en Vercel
 
 1. Importa `ItsSilva/Moni` en Vercel. Directorio raíz del repositorio, preset **Vite**, Node **22.x**, build `npm run build`, salida `dist`. `vercel.json` incluye la configuración y cabeceras de seguridad. Las funciones están en `api/`.
@@ -23,17 +27,18 @@ Cambian encabezado, apoyo, principios, orden y copy de beneficios, explicación 
 | `LEAD_HASH_SECRET` | Secreto aleatorio de al menos 32 caracteres; mantener estable durante el estudio |
 | `VITE_DATA_CONTROLLER` | Identidad real del responsable del tratamiento, acordada con el docente |
 | `VITE_CONTACT_EMAIL` | Correo real para consultas, retiro de autorización y eliminación; puede ser Gmail |
+| `VITE_REGISTRATION_ENABLED` | `false` pausa formulario y medición; cambiar a `true` y redesplegar al completar la conexión de almacenamiento |
 
-Las dos variables `VITE_` son públicas y se incorporan al build; las demás solo viven en el servidor. Genera el secreto en tu equipo, por ejemplo `openssl rand -hex 32`. Activa las variables en Production; usa otra base para Preview o limita las pruebas a `test=1`. Al cambiar las variables públicas, vuelve a desplegar.
+Las variables `VITE_` son públicas y se incorporan al build; las demás solo viven en el servidor. Genera el secreto en tu equipo, por ejemplo `openssl rand -hex 32`. Activa las variables en Production; usa otra base para Preview o limita las pruebas a `test=1`. Al cambiar las variables públicas, vuelve a desplegar.
 
 3. Despliega y registra un contacto de prueba por variante. Comprueba que aparecen `moni:test:v2:lead:*` y `moni:test:v2:visit:*` en Redis. Comprueba también `moni:test:v2:event:*` al pulsar CTA, cambiar un campo, reabrir una FAQ y permanecer 10 segundos con la página visible. Después usa las URLs sin `test=1` exclusivamente para el lanzamiento real.
 4. Verifica el aviso de datos con el responsable antes de abrir la captación y define fechas, presupuesto, criterios mínimos y anuncios con el docente.
 
-La web puede desplegarse sin credenciales, pero el formulario se mantiene deshabilitado si falta responsable o contacto; el API rechaza escrituras cuando falta configuración. Nunca se confirma un registro sin que el almacenamiento responda correctamente. No se ha conectado una base real ni se han creado campañas desde este repositorio.
+La web puede desplegarse sin credenciales, pero el formulario se mantiene deshabilitado si falta responsable o contacto; el API rechaza escrituras cuando falta configuración. Nunca se confirma un registro sin que el almacenamiento responda correctamente. No se ha conectado una base real ni se han creado campañas desde este repositorio. Tras conectar Redis, habilitar el registro para la prueba del equipo con `test=1`, confirmar el guardado y recién entonces compartir las URLs de campaña.
 
 ## Correo y nombre del proyecto
 
-No hace falta Google Workspace para el piloto académico. Una cuenta gratuita `@gmail.com` dedicada al proyecto sirve como canal de contacto. Crear en [Gmail](https://www.google.com/intl/es-419/gmail/about/) → Crear una cuenta → Para uso personal. Elegir una dirección disponible, completar la verificación de Google y activar verificación en dos pasos. La dirección sugerida no se considera existente hasta que el equipo la registre.
+No hace falta Google Workspace para el piloto académico. Una cuenta gratuita `@gmail.com` dedicada al proyecto sirve como canal de contacto. Crear en [Gmail](https://www.google.com/intl/es-419/gmail/about/) → Crear una cuenta → Para uso personal. Elegir una dirección disponible, completar la verificación de Google y activar verificación en dos pasos. El equipo confirmó la creación de `monibank.proyecto@gmail.com`.
 
 El nombre público es **Moni Bank · Proyecto académico**. Si Moni Bank no es una persona jurídica constituida, no asumir que la marca sustituye la identificación del responsable real: definir con el docente quién asume el tratamiento y qué identidad/contacto se publicarán. `VITE_DATA_CONTROLLER` se conserva configurable; no se inventan nombres ni correos.
 
