@@ -1,0 +1,14 @@
+{
+  "baseline_commit": "c54d4e5701a95220e05144c4ce48af8194103e52",
+  "note": "Protected product components/assets; shared CSS and Social also require visual comparison.",
+  "sha256": {
+    "public/moni-logo.svg": "adfca9213a1d4c37de64bba832be7aef6f059955ac82d4f78fa9fc315a1b0c6a",
+    "public/product/headphones.svg": "4c80cf52bfc80dd9363d342a9791b77b57065462044d71ea5c4764eb9ca44952",
+    "public/product/imgChip.svg": "7706a5fe5457b39edb97dbcf61ea583bc62786922949a9c288e2d78a5cb0ca5b",
+    "public/product/imgContraer.svg": "0eaeb833d3714485c5452b5f2ebba783d129a48927a7bf417e41dd02bb17ca7a",
+    "public/product/imgEllipse.svg": "85a4afdd468838cecf104e05e7f7d1ff5234339ce0d8d376947be8a2b40c41c6",
+    "public/product/imgSinContacto.svg": "9795a9871aebfc518ea5b478e07f22dbd1a94d6af62e200294bb1cdbaf1c0372",
+    "public/product/whiteLogo.svg": "c32e710743e7c9029e6fe320edec0e7c76d79f488a5469c72244e75ac7e875a1",
+    "src/ProductPreview.tsx": "4e015abe48453d24f55e5e48eafcc9ad75b1696e64c4689b2ad34277855a94fb"
+  }
+}
