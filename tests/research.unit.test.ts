@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { getAttribution } from '../src/attribution';
-import { parseLead, parseAttribution, RETENTION_SECONDS } from '../server/research';
+import { parseLead, parseAttribution, RETENTION_SECONDS, redisConfig } from '../server/research';
 import leadHandler from '../api/lead';
 import visitHandler from '../api/visit';
 import eventHandler from '../api/event';
@@ -23,6 +23,8 @@ describe('research quality',()=>{
  it('isolates test visits and limits UTM size',()=>expect(getAttribution('?variant=bogus&test=1&utm_source='+ 'x'.repeat(300))).toMatchObject({source:'direct',isTest:true,campaign:{utm_source:'x'.repeat(160)}}));
 });
 describe('API behavior',()=>{
+ it('uses the protected Vercel Marketplace REST variables',async()=>{vi.stubEnv('UPSTASH_REDIS_REST_URL','');vi.stubEnv('UPSTASH_REDIS_REST_TOKEN','');vi.stubEnv('KV_REST_API_URL','https://marketplace.invalid');vi.stubEnv('KV_REST_API_TOKEN','marketplace-test-token');const f=vi.fn().mockResolvedValue({ok:true,json:async()=>({result:1})});vi.stubGlobal('fetch',f);const res=response();await leadHandler(request(input()),res as unknown as VercelResponse);expect(res.code).toBe(200);expect(f.mock.calls[0][0]).toBe('https://marketplace.invalid');expect(f.mock.calls[0][1].headers.Authorization).toBe('Bearer marketplace-test-token');});
+ it('never mixes native and Marketplace credentials',()=>{vi.stubEnv('UPSTASH_REDIS_REST_TOKEN','');vi.stubEnv('KV_REST_API_URL','https://marketplace.invalid');vi.stubEnv('KV_REST_API_TOKEN','marketplace-test-token');expect(redisConfig()).toEqual({url:'https://test.invalid',token:''});});
  it('pauses all collection without contacting storage',async()=>{vi.stubEnv('VITE_REGISTRATION_ENABLED','false');const f=vi.fn();vi.stubGlobal('fetch',f);for(const handler of [leadHandler,visitHandler,eventHandler]){const res=response();await handler(request(input()),res as unknown as VercelResponse);expect(res.code).toBe(503);expect(res.body).toEqual({error:'registration-paused'});}expect(f).not.toHaveBeenCalled();});
  it('saves only after validation, with server date, retention and deduplication key',async()=>{
   const fetcher=vi.fn().mockResolvedValueOnce({ok:true,json:async()=>({result:1})}).mockResolvedValueOnce({ok:true,json:async()=>({result:1})});vi.stubGlobal('fetch',fetcher);

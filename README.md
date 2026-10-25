@@ -13,7 +13,7 @@ Cambian encabezado, apoyo, principios, orden y copy de beneficios, explicación 
 
 ## Estado del despliegue
 
-Proyecto Vercel **moni**, espacio **itssilvas-projects**, vinculado a `ItsSilva/Moni`. Dirección asignada: https://moni-sigma-eight.vercel.app. Contacto confirmado: **monibank.proyecto@gmail.com**. El almacenamiento Redis sigue pendiente de conectar y verificar; la captación está pausada mediante `VITE_REGISTRATION_ENABLED=false`. Esta pausa conserva visible el contacto y deshabilita el envío y la medición, también en los endpoints. No iniciar Meta Ads hasta completar la prueba real de guardado.
+Proyecto Vercel **moni**, espacio **itssilvas-projects**, vinculado a `ItsSilva/Moni`. Dirección asignada: https://moni-sigma-eight.vercel.app. Contacto confirmado: **monibank.proyecto@gmail.com**. La base **moni-registros** de Upstash está conectada solo a Production, con credenciales sensibles, plan Free, región `iad1`, sin eviction ni actualización automática de plan. La apertura se controla con `VITE_REGISTRATION_ENABLED`: `false` pausa formulario y medición; `true` habilita la captación tras redesplegar. Preview y Development permanecen pausados. Antes de publicar, cada build con Redis comprueba PING, escritura Lua, lectura exacta y TTL usando una clave temporal de prueba que elimina al terminar; un fallo impide publicar ese build.
 
 ## Desplegar en Vercel
 
@@ -22,8 +22,8 @@ Proyecto Vercel **moni**, espacio **itssilvas-projects**, vinculado a `ItsSilva/
 
 | Variable | Contenido |
 | --- | --- |
-| `UPSTASH_REDIS_REST_URL` | Endpoint HTTPS REST de la base |
-| `UPSTASH_REDIS_REST_TOKEN` | Token privado de escritura/lectura |
+| `UPSTASH_REDIS_REST_URL` o `KV_REST_API_URL` | Endpoint HTTPS REST de la base; Marketplace usa `KV_REST_API_URL` |
+| `UPSTASH_REDIS_REST_TOKEN` o `KV_REST_API_TOKEN` | Token privado de escritura/lectura del mismo par; Marketplace usa `KV_REST_API_TOKEN` |
 | `LEAD_HASH_SECRET` | Secreto aleatorio de al menos 32 caracteres; mantener estable durante el estudio |
 | `VITE_DATA_CONTROLLER` | Identidad real del responsable del tratamiento, acordada con el docente |
 | `VITE_CONTACT_EMAIL` | Correo real para consultas, retiro de autorización y eliminación; puede ser Gmail |
@@ -31,10 +31,10 @@ Proyecto Vercel **moni**, espacio **itssilvas-projects**, vinculado a `ItsSilva/
 
 Las variables `VITE_` son públicas y se incorporan al build; las demás solo viven en el servidor. Genera el secreto en tu equipo, por ejemplo `openssl rand -hex 32`. Activa las variables en Production; usa otra base para Preview o limita las pruebas a `test=1`. Al cambiar las variables públicas, vuelve a desplegar.
 
-3. Despliega y registra un contacto de prueba por variante. Comprueba que aparecen `moni:test:v2:lead:*` y `moni:test:v2:visit:*` en Redis. Comprueba también `moni:test:v2:event:*` al pulsar CTA, cambiar un campo, reabrir una FAQ y permanecer 10 segundos con la página visible. Después usa las URLs sin `test=1` exclusivamente para el lanzamiento real.
+3. Despliega (`vercel.json` ejecuta también `scripts/check-storage.mjs`) y registra un contacto de prueba por variante. Comprueba que aparecen `moni:test:v2:lead:*` y `moni:test:v2:visit:*` en Redis. Comprueba también `moni:test:v2:event:*` al pulsar CTA, cambiar un campo, reabrir una FAQ y permanecer 10 segundos con la página visible. Después usa las URLs sin `test=1` exclusivamente para el lanzamiento real.
 4. Verifica el aviso de datos con el responsable antes de abrir la captación y define fechas, presupuesto, criterios mínimos y anuncios con el docente.
 
-La web puede desplegarse sin credenciales, pero el formulario se mantiene deshabilitado si falta responsable o contacto; el API rechaza escrituras cuando falta configuración. Nunca se confirma un registro sin que el almacenamiento responda correctamente. No se ha conectado una base real ni se han creado campañas desde este repositorio. Tras conectar Redis, habilitar el registro para la prueba del equipo con `test=1`, confirmar el guardado y recién entonces compartir las URLs de campaña.
+La web puede desplegarse sin credenciales, pero el formulario se mantiene deshabilitado si falta responsable o contacto; el API rechaza escrituras cuando falta configuración. Nunca se confirma un registro sin que el almacenamiento responda correctamente. La base real ya está conectada. No se han creado campañas desde este repositorio. Las verificaciones del equipo deben usar `test=1`; no compartir esos enlaces como destino de anuncios.
 
 ## Correo y nombre del proyecto
 

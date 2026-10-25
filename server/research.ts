@@ -25,8 +25,15 @@ export function parseLead(value: unknown) {
  return { email, city:d.city as string, willingness:d.willingness as string, adult:true, consent:true, eligible:d.city === 'cali', attribution:parseAttribution(d.attribution) };
 }
 export function digest(value: string) { return createHmac('sha256', process.env.LEAD_HASH_SECRET!).update(value).digest('hex'); }
+export function redisConfig() {
+ // Keep credentials as a pair: native Upstash or Vercel Marketplace integration.
+ return process.env.UPSTASH_REDIS_REST_URL
+  ? { url:process.env.UPSTASH_REDIS_REST_URL, token:process.env.UPSTASH_REDIS_REST_TOKEN }
+  : { url:process.env.KV_REST_API_URL, token:process.env.KV_REST_API_TOKEN };
+}
 export async function redis<T>(command: (string|number)[]): Promise<T> {
- const result = await fetch(process.env.UPSTASH_REDIS_REST_URL!, { method:'POST', headers:{ Authorization:`Bearer ${process.env.UPSTASH_REDIS_REST_TOKEN}`, 'Content-Type':'application/json' }, body:JSON.stringify(command), signal:AbortSignal.timeout(8000) });
+ const {url,token}=redisConfig();
+ const result = await fetch(url!, { method:'POST', headers:{ Authorization:`Bearer ${token}`, 'Content-Type':'application/json' }, body:JSON.stringify(command), signal:AbortSignal.timeout(8000) });
  if (!result.ok) throw new Error('storage');
  const payload = await result.json() as {result:T; error?:string};
  if (payload.error) throw new Error('storage');
@@ -38,7 +45,8 @@ export function begin(req: VercelRequest, res: VercelResponse): RecordValue | nu
  if (req.headers['sec-fetch-site'] === 'cross-site') { res.status(403).json({error:'origin'}); return null; }
  if (!String(req.headers['content-type']).startsWith('application/json')) { res.status(415).json({error:'content-type'}); return null; }
  if (process.env.VITE_REGISTRATION_ENABLED === 'false') { res.status(503).json({error:'registration-paused'}); return null; }
- if (!process.env.UPSTASH_REDIS_REST_URL?.startsWith('https://') || !process.env.UPSTASH_REDIS_REST_TOKEN || (process.env.LEAD_HASH_SECRET?.length ?? 0) < 32 || !process.env.VITE_DATA_CONTROLLER || !/^\S+@[^\s@]+\.[^\s@]+$/.test(process.env.VITE_CONTACT_EMAIL ?? '')) { res.status(503).json({error:'not-configured'}); return null; }
+ const storage=redisConfig();
+ if (!storage.url?.startsWith('https://') || !storage.token || (process.env.LEAD_HASH_SECRET?.length ?? 0) < 32 || !process.env.VITE_DATA_CONTROLLER || !/^\S+@[^\s@]+\.[^\s@]+$/.test(process.env.VITE_CONTACT_EMAIL ?? '')) { res.status(503).json({error:'not-configured'}); return null; }
  try {
   if (Buffer.byteLength(typeof req.body === 'string' ? req.body : JSON.stringify(req.body ?? {})) > 8192) { res.status(413).json({error:'too-large'}); return null; }
   return object(typeof req.body === 'string' ? JSON.parse(req.body) : req.body);

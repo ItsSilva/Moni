@@ -4,7 +4,7 @@ const destination=process.argv[2];
 if(!destination) throw new Error('Uso: node --env-file=.env.local scripts/export-results.mjs ./exports/resultados.json [--include-contacts]');
 const includeContacts=process.argv.includes('--include-contacts');
 async function redis(command){
- const r=await fetch(process.env.UPSTASH_REDIS_REST_URL,{method:'POST',headers:{Authorization:`Bearer ${process.env.UPSTASH_REDIS_REST_TOKEN}`,'Content-Type':'application/json'},body:JSON.stringify(command)});
+ const r=await fetch((process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL),{method:'POST',headers:{Authorization:`Bearer ${process.env.UPSTASH_REDIS_REST_URL ? process.env.UPSTASH_REDIS_REST_TOKEN : process.env.KV_REST_API_TOKEN}`,'Content-Type':'application/json'},body:JSON.stringify(command)});
  if(!r.ok)throw new Error('No se pudo consultar el almacenamiento');
  const payload=await r.json();if(payload.error)throw new Error('Error de consulta');return payload.result;
 }
