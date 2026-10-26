@@ -1,6 +1,7 @@
 # Moni · Su autonomía, tu compañía
 
-> **Documento de continuidad para Codex — actualizado el 25 de octubre de 2026.**
+> **Documento de continuidad para Codex — actualizado el 26 de octubre de 2026.**
+> **Decisión pública vigente:** se retira la etiqueta «proyecto académico» de toda la web y se renuevan footer y logo de la landing. Ver sección 26; las menciones académicas históricas de este documento no son instrucciones para restaurar ese rótulo público.
 > **Actualización visual implementada:** ambas variantes comparten una composición nueva, con producto protegido y contratos existentes. Ver [revisión visual y evidencia](docs/visual-review.md) y [continuidad de esta entrega](#25-entrega-visual-del-25-de-octubre-de-2026). **Primero se utiliza A y después B; A sigue por defecto.** Las secciones 1–24 conservan el traspaso previo y su contexto histórico; el estado de esta entrega se registra al final.
 
 Este README reúne el contexto de producto, las decisiones tomadas, el estado comprobado, las conexiones necesarias, las skills instaladas, los límites del rediseño, el funcionamiento técnico y los pendientes. Está escrito para que otro agente pueda continuar sin disponer del chat original. No contiene secretos y no concede acceso por sí mismo a cuentas privadas.
@@ -69,7 +70,7 @@ El usuario ya creó videos para publicidad y publicaciones de Instagram. La web 
 
 | Tema | Decisión vigente |
 | --- | --- |
-| Nombre público | Moni Bank · Proyecto académico |
+| Nombre público | Moni Bank |
 | Contacto | `monibank.proyecto@gmail.com` |
 | Dominio | Subdominio de Vercel; no consta dominio propio adquirido |
 | Variantes | A: control y acompañamiento; B: aprendizaje y ahorro |
@@ -473,7 +474,7 @@ El QA publicado debe usar `test=1`. Son claves de prueba dentro de la misma base
 | Variable | Visibilidad | Configuración / función |
 | --- | --- | --- |
 | `VITE_CONTACT_EMAIL` | Pública, incluida en build | `monibank.proyecto@gmail.com` |
-| `VITE_DATA_CONTROLLER` | Pública, incluida en build | `Moni Bank · Proyecto académico` |
+| `VITE_DATA_CONTROLLER` | Pública, incluida en build | `Moni Bank` |
 | `VITE_REGISTRATION_ENABLED` | Pública y leída por servidor | `true` en Production; `false` en Preview y Development |
 | `KV_REST_API_URL` | Solo servidor; Sensitive | Endpoint REST de Upstash inyectado por Marketplace |
 | `KV_REST_API_TOKEN` | Solo servidor; Sensitive | Token REST con escritura del mismo par |
@@ -949,3 +950,13 @@ Este documento distingue **estado implementado**, **instrucciones para la siguie
 - Pendiente de producto: escoger la tarjeta aprobada para una eventual unificación. Social tiene ojos y tarjeta rosa; Figma/código vigentes, azul sin ojos. En esta entrega se mantiene congelado el producto de main.
 
 Consultar el SHA de publicación, READY y comprobación de producción en la entrega del chat y los registros de GitHub/Vercel del commit. La aprobación automática de pruebas no sustituye las limitaciones documentadas.
+
+## 26. Corrección de presentación pública y footer · 26 de octubre de 2026
+
+- A petición expresa del usuario, se retira la etiqueta «proyecto académico» de cabecera, registro, footer, privacidad y descripción para buscadores. `VITE_DATA_CONTROLLER` pasa a `Moni Bank` en Production/Preview/Development; requiere un nuevo despliegue. La documentación conserva el contexto de investigación y su historial. Esta decisión sustituye las indicaciones públicas anteriores sobre esa etiqueta.
+- Se mantienen los fines de investigación, consentimiento, retención de 180 días y la aclaración de propuesta de producto y lista de espera. No se añade ninguna afirmación de banco operativo. Es una corrección editorial: no cambia el tratamiento ni el contrato de consentimiento `moni-interest-v2`.
+- Footer compartido: marca y lema existente, navegación útil, contacto real y acceso a privacidad/accesibilidad; tres columnas en escritorio y estructura vertical en móvil. Sin estadísticas, alianzas, sellos o servicios inventados.
+- Logo de landing: nuevo export autorizado `../LogotipoMoni.png` (PNG RGBA 128×32, dibujo en 89×32). `public/moni-logotype.png` elimina solo el margen transparente, sin deformar ni redibujar. Cabecera y footer usan proporción 89:32 con altura automática. `public/moni-logo.svg`, tarjeta, pantallas, `ProductPreview.tsx` y `styles.css` permanecen intactos.
+- QA: 34 unitarias/API, build TypeScript/Vite y 22 E2E correctos. Revisión A/B a 320/390/768/1440 px: sin overflow ni infracciones axe en las reglas ejecutadas; enlaces, diálogos y retorno de foco correctos. El logo mantiene proporción medida en 320/390/1440. Cuatro capturas normalizadas del producto: cero píxeles diferentes frente al estado anterior.
+- Evidencia local ignorada: `.qa/footer-before/` y `.qa/footer-final/`; revisión detallada en [footer-review](docs/footer-review.md). Pruebas publicadas siempre con `test=1`; sin consultar contactos reales.
+- Meta Pixel sigue pendiente, sin activarse. No se requiere para validar interés con la medición propia actual; su incorporación futura debe seguir la sección 18.
