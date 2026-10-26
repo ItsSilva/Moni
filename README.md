@@ -1,7 +1,7 @@
 # Moni · Su autonomía, tu compañía
 
 > **Documento de continuidad para Codex — actualizado el 25 de octubre de 2026.**
-> La landing, el formulario, el despliegue y Redis ya funcionan. La siguiente etapa es mejorar la calidad visual de **ambas variantes** sin perder identidad, alterar la app que aparece en las piezas publicitarias ni romper la investigación. **Primero se utiliza A y después B.**
+> **Actualización visual implementada:** ambas variantes comparten una composición nueva, con producto protegido y contratos existentes. Ver [revisión visual y evidencia](docs/visual-review.md) y [continuidad de esta entrega](#25-entrega-visual-del-25-de-octubre-de-2026). **Primero se utiliza A y después B; A sigue por defecto.** Las secciones 1–24 conservan el traspaso previo y su contexto histórico; el estado de esta entrega se registra al final.
 
 Este README reúne el contexto de producto, las decisiones tomadas, el estado comprobado, las conexiones necesarias, las skills instaladas, los límites del rediseño, el funcionamiento técnico y los pendientes. Está escrito para que otro agente pueda continuar sin disponer del chat original. No contiene secretos y no concede acceso por sí mismo a cuentas privadas.
 
@@ -932,3 +932,20 @@ Referencias técnicas para comprobar al implementar:
 - [Control de consentimiento del Pixel](https://developers.facebook.com/documentation/meta-pixel/implementation/gdpr), como referencia técnica; no sustituye evaluar las reglas aplicables al estudio.
 
 Este documento distingue **estado implementado**, **instrucciones para la siguiente fase** y **pendientes**. Ante una contradicción con el código o los servicios actuales, comprobar la realidad, conservar los límites del usuario y actualizar la documentación con evidencia.
+
+## 25. Entrega visual del 25 de octubre de 2026
+
+- Repo clonado en `Moni`, junto a `../Social`; originales intactos y fuera del repositorio. Formatos reales: `InstagramPostsFeed.jpeg`, `TikTokReel1.mp4` y `TikTokReel2.mp4`. Inventario, duración y discrepancias en [visual-review](docs/visual-review.md).
+- Dirección: capítulos de color de Moni, Outfit y producto existente. Hero con jerarquía entre tarjeta y promesa A/B, escenario de producto, beneficio principal destacado, FAQ con medida de lectura y formulario con mejor composición. No se inventan testimonios, métricas o capacidades operativas.
+- `src/landing.css` contiene únicamente estilos de la landing. `src/styles.css`, `src/ProductPreview.tsx`, logo y assets de producto están sin cambios. Las capturas normalizadas del hero y pareja de pantallas tienen cero píxeles diferentes antes/después para A y B.
+- Formulario: región de éxito persistente, foco de confirmación, `aria-busy` y email sin corrector. Guardado, campos, consentimientos, errores, datos, API, medición, atribución, Redis y configuración Vercel se conservan.
+- Microinteracciones: pulsación de CTA, aparición de confirmación y diálogo. Sin movimiento del producto o al recorrer secciones; movimiento reducido desactiva todo. Hover condicionado al puntero.
+- Verificación local: **34 unitarias/API y 22 E2E**, TypeScript/build, axe, teclado, estados de formulario, cinco anchos 320–1440 px, reflujo equivalente a zoom 200/400% y aviso de registro pausado. Los E2E usan mocks; las pruebas publicadas y el chequeo de build de Vercel verifican el almacenamiento real por separado. No se declara revisión con NVDA/VoiceOver ni Safari físico.
+- Capturas reproducibles: con Vite y configuración pública ficticia de QA, ejecutar `node scripts/capture-visual.mjs final`. Escribe `.qa/final/`, siempre con `test=1`, y normaliza solo la colocación externa de clones para comparar producto. `.qa/`, `.qa-tools/` y `.taste-skill/` son locales e ignorados. Ningún original de Social se publica.
+- Auditoría npm: los seis avisos heredados están en la cadena de desarrollo de `@vercel/node` (`undici`, `@fastify/busboy`, `path-to-regexp`, `ajv`, `@vercel/static-config`). `npm audit --omit=dev` devuelve cero. No se aplicó la propuesta automática de downgrade mayor a `@vercel/node@4`; queda una revisión técnica controlada. Esto no certifica el runtime administrado de Vercel.
+- Taste y better-interface se ejecutaron con hallazgos y excepciones documentados. El inspector estricto de Taste **no se declara aprobado**: reclama, entre otros, copy de más de dos líneas, sombras y rótulos internos del producto y una cuota de fotografías/movimiento que contradice Moni. No se cambió el producto ni se añadió relleno para satisfacer esos contadores.
+- Figma: diseño y componentes accesibles por MCP; comentarios no expuestos por el conector y bloqueados por registro en el navegador integrado. Pendiente iniciar sesión allí o facilitar los comentarios para revisarlos. No se modifica Figma.
+- **Meta Pixel sigue pendiente y sin activar.** Hacen falta ID real/dataset, acceso a Events Manager y Eventos de prueba, definición de conversión y consentimiento publicitario separado con aviso/CSP verificados según el plan de la sección 18.
+- Pendiente de producto: escoger la tarjeta aprobada para una eventual unificación. Social tiene ojos y tarjeta rosa; Figma/código vigentes, azul sin ojos. En esta entrega se mantiene congelado el producto de main.
+
+Consultar el SHA de publicación, READY y comprobación de producción en la entrega del chat y los registros de GitHub/Vercel del commit. La aprobación automática de pruebas no sustituye las limitaciones documentadas.

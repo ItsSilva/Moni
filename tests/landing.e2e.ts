@@ -63,3 +63,46 @@ test('defaults to A and separates team test identity from the live browser ident
  await page.goto('/');const live=await page.evaluate(()=>JSON.parse(localStorage.getItem('moni-research-v2-live')!));
  expect(live).toMatchObject({variant:'a',isTest:false,source:'direct',crossExposure:false});expect(live.visitorId).not.toBe(testId);
 });
+
+test('pending save, rate limit and retry never claim success before persistence',async({page})=>{
+ let release:()=>void=()=>{};let attempts=0;
+ const gate=new Promise<void>(resolve=>{release=resolve;});
+ await page.route('**/api/lead',async route=>{attempts++;if(attempts===1){await gate;await route.fulfill({status:429,json:{error:'rate'}});}else await route.fulfill({json:{ok:true}});});
+ await page.goto('/?variant=a&test=1');
+ await page.getByLabel('Correo electrónico').fill('retry@example.com');await page.getByLabel('Ciudad',{exact:true}).selectOption('other');await page.getByLabel('¿Considerarías').selectOption('maybe');await page.locator('#adult').check();await page.locator('#consent').check();
+ await page.getByRole('button',{name:cta,exact:true}).click();
+ await expect(page.getByRole('button',{name:'Guardando tu interés…'})).toBeDisabled();
+ await expect(page.locator('form')).toHaveAttribute('aria-busy','true');
+ await expect(page.getByText('¡Gracias por dar el primer paso!')).toHaveCount(0);
+ release();await expect(page.getByRole('alert')).toContainText('Espera unos minutos');
+ await expect(page.getByLabel('Correo electrónico')).toHaveValue('retry@example.com');await expect(page.locator('#consent')).toBeChecked();
+ await page.getByRole('button',{name:cta,exact:true}).click();await expect(page.locator('.success')).toBeFocused();await expect(page.getByText('¡Gracias por dar el primer paso!')).toBeVisible();expect(attempts).toBe(2);
+});
+
+test('invalid email and missing consent make no lead request',async({page})=>{
+ let requests=0;await page.route('**/api/lead',r=>{requests++;return r.fulfill({json:{ok:true}});});await page.goto('/?variant=b&test=1');
+ await page.getByLabel('Correo electrónico').fill('no-es-un-correo');await page.getByRole('button',{name:cta,exact:true}).click();
+ await expect(page.locator('.error-summary')).toBeFocused();await expect(page.locator('#email-error')).toContainText('válido');
+ await page.getByLabel('Correo electrónico').fill('consent@example.com');await page.getByLabel('Ciudad',{exact:true}).selectOption('cali');await page.getByLabel('¿Considerarías').selectOption('yes');await page.locator('#adult').check();
+ await page.getByRole('button',{name:cta,exact:true}).click();await expect(page.locator('#consent-error')).toBeVisible();expect(requests).toBe(0);
+});
+
+test('responsive A and B preserve full app artboards and visible controls',async({page})=>{
+ for(const variant of ['a','b'])for(const width of [320,390,768,1024,1440]){
+  await page.setViewportSize({width,height:900});await page.goto(`/?variant=${variant}&test=1`);await page.evaluate(()=>document.fonts.ready);
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),`${variant} at ${width}`).toBe(true);
+  await expect(page.getByRole('button',{name:cta,exact:true})).toBeEnabled();
+  for(const canvas of await page.locator('.preview-canvas').all()){
+   const shape=await canvas.evaluate(el=>{const child=el.querySelector('.canvas-content') as HTMLElement;const outer=el.getBoundingClientRect();const inner=child.getBoundingClientRect();return {fits:inner.width<=outer.width+1&&inner.height<=outer.height+1,ratio:inner.width/inner.height};});
+   expect(shape.fits).toBe(true);
+  }
+ }
+});
+
+test('keyboard reaches confirmation, both dialogs and restores focus',async({page})=>{
+ await page.goto('/?test=1');await page.keyboard.press('Tab');await expect(page.getByRole('link',{name:'Saltar al contenido'})).toBeFocused();await page.keyboard.press('Enter');
+ for(const label of ['Privacidad','Accesibilidad']){
+  const trigger=page.getByRole('button',{name:label,exact:true});await trigger.focus();await page.keyboard.press('Enter');await expect(page.getByRole('dialog')).toBeVisible();
+  await expect(page.getByRole('button',{name:'Cerrar',exact:true})).toBeFocused();await page.keyboard.press('Escape');await expect(trigger).toBeFocused();
+ }
+});
