@@ -37,7 +37,7 @@ function App(){
  const content=variants[attribution.variant];const dialog=useRef<HTMLDialogElement>(null);const [modal,setModal]=useState<'privacy'|'accessibility'>('privacy');
  useEffect(startMeasurement,[]);
  function open(type:'privacy'|'accessibility'){setModal(type);dialog.current?.showModal();}
- return <><a className="skip-link" href="#contenido">Saltar al contenido</a><header className="site-header"><nav className="wrap nav" aria-label="Principal"><a href="#inicio" className="brand" aria-label="Moni, inicio"><img className="landing-logo" src="/moni-logotype.png" alt="Moni" width="89" height="32"/></a><div className="nav-links"><a href="#como-funciona">Cómo funciona</a><a href="#preguntas">Preguntas</a></div><CTA placement="header"/></nav></header>
+ return <><a className="skip-link" href="#contenido">Saltar al contenido</a><header className="site-header"><nav className="wrap nav" aria-label="Principal"><a href="#inicio" className="brand" aria-label="Moni, inicio"><img className="landing-logo" src="/moni-logotype.svg" alt="Moni" width="89" height="32"/></a><div className="nav-links"><a href="#como-funciona">Cómo funciona</a><a href="#preguntas">Preguntas</a></div><CTA placement="header"/></nav></header>
  <main id="contenido" className="landing"><section id="inicio" className="hero"><div className="wrap hero-grid"><div className="hero-copy"><h1>{content.title.split('\n')[0]}<span className="hero-promise">{'\n'}{content.title.split('\n')[1]}</span></h1><p className="hero-description">{content.description}</p><div className="hero-action"><CTA placement="hero"/><p className="hero-note">Una propuesta para familias con niños de 8 a 14 años.</p></div></div><div className="hero-stage"><HeroProduct variant={attribution.variant}/></div></div></section>
  <div className="principles"><div className="wrap"><p>{content.principle}</p><span>{content.principles}</span></div></div>
  <section className="section benefits" aria-labelledby="benefits-title"><div className="wrap"><div className="section-heading"><h2 id="benefits-title">{content.benefitsTitle}</h2><p className="section-lead">{content.benefitsDescription}</p></div><div className="cards">{content.benefits.map(benefit=><article className={`benefit ${benefit.color}`} key={benefit.preview}><div className="benefit-copy"><h3>{benefit.title}</h3><p>{benefit.body}</p></div><div className="benefit-art"><BenefitPreview view={benefit.preview}/></div></article>)}</div></div></section>
@@ -46,9 +46,8 @@ function App(){
  <Registration openPrivacy={()=>open('privacy')}/></main>
  <footer className="site-footer">
   <div className="wrap footer-main">
-   <div className="footer-brand"><a href="#inicio" aria-label="Moni, volver al inicio"><img className="landing-logo" src="/moni-logotype.png" alt="Moni" width="89" height="32"/></a><p className="footer-tagline">Su autonomía,<br/>tu compañía.</p></div>
+   <div className="footer-brand"><a href="#inicio" aria-label="Moni, volver al inicio"><img className="landing-logo" src="/moni-logotype.svg" alt="Moni" width="89" height="32"/></a><p className="footer-tagline">Su autonomía,<br/>tu compañía.</p></div>
    <nav className="footer-column" aria-label="Explora Moni"><h2>Explora Moni</h2><a href="#como-funciona">Cómo funciona</a><a href="#preguntas">Preguntas frecuentes</a><a href="#registro">Lista de espera</a></nav>
-   <div className="footer-column footer-contact"><h2>Hablemos</h2><p>Consultas sobre Moni<br/>y tus datos.</p>{contact&&<a className="footer-email" href={`mailto:${contact}`}>{contact}</a>}</div>
   </div>
   <div className="wrap footer-bottom"><p>Moni Bank</p><div className="footer-policies"><button className="text-button" onClick={()=>open('privacy')}>Privacidad</button><button className="text-button" onClick={()=>open('accessibility')}>Accesibilidad</button></div><p className="footer-disclosure">Unirte a la lista de espera no abre una cuenta ni garantiza un cupo.</p></div>
  </footer>

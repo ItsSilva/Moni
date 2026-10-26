@@ -7,7 +7,8 @@ Lee README.md completo antes de cambiar la web. Es el documento de continuidad d
 - Mejora visual de ambas landings; conservar la implementación funcional existente.
 - La web es un proyecto académico de interés/lista de espera, no un banco operativo.
 - Decisión pública vigente del usuario (26/10/2026): no mostrar la etiqueta «proyecto académico» ni sus variantes en la web, metadatos o responsable público. Conservar la transparencia sobre investigación, consentimiento, propuesta de producto y condiciones de lista de espera. Las menciones históricas de la documentación no deben restaurar esa etiqueta pública.
-- El logo de cabecera/footer es ahora `public/moni-logotype.png`, exportado por el usuario como `../LogotipoMoni.png` y recortado solo en su margen transparente. Mantener su proporción 89:32 y `height: auto`. El logo SVG del producto protegido permanece intacto.
+- El logo de cabecera/footer es `public/moni-logotype.svg`, exportado por el usuario como `../Logotipo.svg`; se ajustó solo el viewport vacío de 128×32 a 89×32. Mantener proporción 89:32 y `height: auto`. El logo SVG del producto protegido permanece intacto.
+- No mostrar correo ni bloque de contacto en el footer por decisión del usuario del 26/10/2026. Conservar el canal para derechos sobre datos en los avisos de privacidad/accesibilidad.
 - Referencias: Nu Cuenta y Revolut Kids & Teens, enlazadas en README. No copiar marca, assets o afirmaciones comerciales.
 - Revisar primero los videos y posts de la carpeta local `Social` del usuario. No se presupone que esté en GitHub. Si falta, pedir su ruta mientras se avanza en lectura técnica independiente.
 - No publicar, mover, sobrescribir o modificar originales de Social.

@@ -953,6 +953,8 @@ Consultar el SHA de publicación, READY y comprobación de producción en la ent
 
 ## 26. Corrección de presentación pública y footer · 26 de octubre de 2026
 
+**Ajuste posterior vigente:** cabecera y footer usan `public/moni-logotype.svg` a partir del export vectorial `../Logotipo.svg` del usuario. Se conserva el trazado y se elimina solo el viewport vacío lateral (128×32 → 89×32), con altura automática. El PNG anterior ya no se usa. Se retira el bloque «Hablemos» completo del footer y se equilibran dos columnas en escritorio, una en móvil. El correo permanece dentro de los avisos para solicitudes sobre datos y barreras de accesibilidad. No se cambian formulario, configuración o almacenamiento.
+
 - A petición expresa del usuario, se retira la etiqueta «proyecto académico» de cabecera, registro, footer, privacidad y descripción para buscadores. `VITE_DATA_CONTROLLER` pasa a `Moni Bank` en Production/Preview/Development; requiere un nuevo despliegue. La documentación conserva el contexto de investigación y su historial. Esta decisión sustituye las indicaciones públicas anteriores sobre esa etiqueta.
 - Se mantienen los fines de investigación, consentimiento, retención de 180 días y la aclaración de propuesta de producto y lista de espera. No se añade ninguna afirmación de banco operativo. Es una corrección editorial: no cambia el tratamiento ni el contrato de consentimiento `moni-interest-v2`.
 - Footer compartido: marca y lema existente, navegación útil, contacto real y acceso a privacidad/accesibilidad; tres columnas en escritorio y estructura vertical en móvil. Sin estadísticas, alianzas, sellos o servicios inventados.

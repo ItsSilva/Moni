@@ -104,7 +104,7 @@
 .site-footer { background: var(--soft); color: var(--ink); }
 .footer-main {
   display: grid;
-  grid-template-columns: minmax(0, 1.35fr) minmax(0, .8fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
   gap: 64px;
   padding-block: 64px 48px;
 }
@@ -114,8 +114,6 @@
 .footer-column { display: flex; flex-direction: column; align-items: flex-start; min-width: 0; }
 .footer-column h2 { font-size: 1rem; line-height: 1.5; font-weight: 600; margin-block: 8px 16px; }
 .footer-column > a { display: flex; align-items: center; min-height: 44px; font-size: 1rem; line-height: 1.5; padding-block: 10px; text-decoration: none; }
-.footer-column > p { color: var(--muted); font-size: 1rem; line-height: 1.5; margin-bottom: 12px; }
-.footer-column .footer-email { color: var(--hover); text-decoration: underline; text-underline-offset: 4px; overflow-wrap: anywhere; display: block; max-width: 100%; }
 .footer-bottom { display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 8px 32px; padding-block: 24px 32px; }
 .footer-bottom > p { font-size: .875rem; line-height: 1.5; color: var(--muted); }
 .footer-policies { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 28px; }
@@ -176,7 +174,6 @@ dialog p { max-width: 65ch; }
 }
 @media (max-width: 900px) {
   .footer-main { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px; padding-block: 48px 24px; }
-  .footer-brand { grid-column: 1 / -1; flex-direction: row; align-items: center; justify-content: space-between; gap: 24px; }
   .footer-tagline { font-size: 1.75rem; }
   .site-header .wrap, .landing .wrap, .site-footer .wrap { width: calc(100% - 48px); }
   .site-header .nav { min-height: 84px; gap: 16px; }
@@ -238,7 +235,6 @@ dialog p { max-width: 65ch; }
   .footer-main { grid-template-columns: minmax(0, 1fr); gap: 24px; padding-block: 40px 16px; }
   .footer-brand { flex-direction: column; align-items: flex-start; gap: 20px; }
   .footer-tagline { font-size: 1.75rem; }
-  .footer-contact { grid-column: 1 / -1; }
   .footer-bottom { grid-template-columns: 1fr; gap: 16px; padding-block: 16px 32px; }
   .footer-bottom .footer-disclosure { grid-column: auto; }
 }

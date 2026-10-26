@@ -1,5 +1,11 @@
 # Revisión de footer y logo · 26/10/2026
 
+## Ajuste posterior: SVG y footer sin contacto
+
+Se sustituye el PNG en cabecera/footer por el export vectorial del usuario `../Logotipo.svg`. `public/moni-logotype.svg` conserva todos los trazados, rellenos y clip paths: solo se ajusta el ancho/viewBox vacío de 128 a 89; el dibujo ya estaba recortado a 89×32 en el original. La comparación XML, normalizando únicamente atributos raíz, confirma contenido idéntico. CSS mantiene `height: auto`, proporción medida 89:32 en 320/390/1440 px. Logo del producto, app y tarjeta intactos.
+
+El bloque Hablemos/correo se elimina del footer; escritorio pasa de tres a dos columnas y móvil conserva una. La revisión comprueba ausencia de enlaces mailto y del rótulo Hablemos en el footer. Los avisos conservan el canal para ejercer derechos sobre datos y comunicar barreras de accesibilidad. No se modifican variables Vercel, API o consentimiento. QA mantiene la suite de 34 unitarias/API, build y 22 E2E; revisión de footer A/B en cuatro anchos, teclado y axe. La evidencia vectorial de página/producto queda en `.qa/vector-final/`; los screenshots específicos de footer y cabecera se actualizan en `.qa/footer-final/`. Las secciones siguientes documentan la primera renovación y son históricas donde describen PNG/contacto.
+
 ## Alcance y cobertura
 
 Corrección puntual en React/TypeScript y CSS existente. Convenciones: README, AGENTS y producto congelado. Instrucción vigente del usuario: retirar la etiqueta académica pública y usar su nuevo export de logo. Las revisiones visuales de la entrega anterior siguen como historial, sin imponer rótulos retirados.
