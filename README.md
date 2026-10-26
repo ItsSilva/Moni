@@ -1,16 +1,16 @@
 # Moni · Su autonomía, tu compañía
 
-> **Documento de continuidad para Codex — actualizado el 26 de octubre de 2026.**
-> **Decisión pública vigente:** se retira la etiqueta «proyecto académico» de toda la web y se renuevan footer y logo de la landing. Ver sección 26; las menciones académicas históricas de este documento no son instrucciones para restaurar ese rótulo público.
-> **Actualización visual implementada:** ambas variantes comparten una composición nueva, con producto protegido y contratos existentes. Ver [revisión visual y evidencia](docs/visual-review.md) y [continuidad de esta entrega](#25-entrega-visual-del-25-de-octubre-de-2026). **Primero se utiliza A y después B; A sigue por defecto.** Las secciones 1–24 conservan el traspaso previo y su contexto histórico; el estado de esta entrega se registra al final.
+> **Continuidad para cualquier modelo o agente de IA — auditado el 26 de octubre de 2026.**
+> **Estado vigente:** ambas landings están rediseñadas y publicadas. A es la predeterminada; B requiere `?variant=b`. Cabecera y footer usan el SVG vectorial nuevo; el footer no contiene contacto. No mostrar «proyecto académico» en la web ni restaurar esa etiqueta desde versiones anteriores de Figma o documentación.
+> **Esta entrega solo actualiza README.md.** La auditoría contrasta el código y los servicios del commit `009e5d0469fb24a5f539b192b43c181503fb6e6d`; no encarga otro rediseño ni cambios en Figma. Estado comprobado y límites en la sección 4; pendientes reales en la 22.
 
-Este README reúne el contexto de producto, las decisiones tomadas, el estado comprobado, las conexiones necesarias, las skills instaladas, los límites del rediseño, el funcionamiento técnico y los pendientes. Está escrito para que otro agente pueda continuar sin disponer del chat original. No contiene secretos y no concede acceso por sí mismo a cuentas privadas.
+Este documento permite continuar sin el chat original. Describe producto, decisiones, archivos, servicios, pruebas y pendientes. No contiene secretos ni transfiere credenciales. Las instrucciones vigentes del usuario determinan el alcance: los ejemplos de tareas futuras no autorizan su ejecución.
 
-**Instrucción principal:** mejorar la landing hasta alcanzar una ejecución visual comparable con páginas profesionales de producto financiero, tomando referencias de Nu y Revolut, **conservando siempre el estilo gráfico de Moni y la interfaz de su app**. Moni Bank sigue siendo un proyecto académico; el acabado profesional no debe sugerir que ya opera como banco.
+La landing valida interés en una propuesta de tarjeta y app; no representa un banco operativo. El contexto académico se conserva en la documentación interna, mientras la web mantiene información sobre investigación, consentimiento, propuesta de producto y lista de espera. Las secciones 1–24 describen el estado vigente y procedimientos; las 25–26 son historial fechado, no tareas por repetir.
 
 ## Índice
 
-1. [Arranque para Codex](#1-arranque-para-codex)
+1. [Arranque para cualquier IA](#1-arranque-para-cualquier-ia)
 2. [Contexto y decisiones](#2-contexto-y-decisiones)
 3. [Recursos, conexiones y permisos](#3-recursos-conexiones-y-permisos)
 4. [Estado verificado y límites de la evidencia](#4-estado-verificado-y-límites-de-la-evidencia)
@@ -34,23 +34,21 @@ Este README reúne el contexto de producto, las decisiones tomadas, el estado co
 22. [Plan de ejecución y pendientes](#22-plan-de-ejecución-y-pendientes)
 23. [Prompt listo para retomar](#23-prompt-listo-para-retomar)
 24. [Fuentes y trazabilidad](#24-fuentes-y-trazabilidad)
+25. [Historial del rediseño](#25-entrega-visual-del-25-de-octubre-de-2026)
+26. [Historial de footer y logotipo](#26-corrección-de-presentación-pública-y-footer--26-de-octubre-de-2026)
 
-## 1. Arranque para Codex
+## 1. Arranque para cualquier IA
 
-Antes de editar la interfaz:
+1. Leer completos [README.md](README.md) y [AGENTS.md](AGENTS.md), aunque el modelo no cargue automáticamente archivos de instrucciones. Leer también [skills-lock](docs/skills-lock.json) y [product-baseline](docs/product-baseline.json). Confirmar la tarea actual del usuario; no ejecutar pendientes por inferencia.
+2. Inspeccionar la carpeta abierta antes de clonar o editar. La distribución local es `Moni Back App/Moni` (repositorio), `Moni Back App/Social` (referencias privadas) y los exports `Logotipo.svg` / `LogotipoMoni.png` junto a esas carpetas. Desde el repo, Social es `../Social`.
+3. Si no existe copia, clonar `https://github.com/ItsSilva/Moni.git` en la subcarpeta libre `Moni`. Nunca clonar sobre la carpeta padre no vacía ni mover/borrar Social. Si existe, revisar `git status --short`, `git branch --show-current`, `git log -1 --oneline` y `git remote -v`; comprobar `origin/main`. Con el árbol limpio y `main` sin divergencia, `git pull --ff-only origin main` actualiza sin reescribir historia. Con cambios o divergencia, preservarlos y resolver el caso antes de integrar; no usar reset/clean/force push.
+4. Confirmar conexiones disponibles para la operación: GitHub, Vercel y Figma no heredan permisos del chat anterior. La sección 3 distingue lectura, edición y comentarios. Si solo se cambia documentación, no hace falta editar diseños ni consultar datos personales.
+5. Leer los archivos relacionados con la tarea según la sección 11. Para una revisión visual integral, leer las nueve skills y sus referencias aplicables; para un ajuste acotado, las instrucciones pertinentes. Las skills están en archivos y pueden utilizarse aunque otro modelo no tenga integración automática.
+6. Antes de cambios visuales, capturar A/B en móvil/escritorio con `test=1`, revisar Social cuando afecte identidad/producto y distinguir estado publicado de Figma. Aplicar las restricciones de la sección 5; usar el flujo 5.5 si el usuario pide expresamente modificar pantallas.
+7. Implementar solo el alcance solicitado, verificar con las pruebas de la sección 20 y revisar el diff. No alterar API, datos, atribución, infraestructura o producto como efecto secundario.
+8. Publicar cambios autorizados mediante el flujo de la sección 21 y entregar evidencia correspondiente al cambio. Actualizar este documento si cambia configuración, comportamiento, fuente de referencia o procedimiento. Declarar lo no comprobado.
 
-1. Leer este documento y [AGENTS.md](AGENTS.md) completos. Confirmar el estado actual de `main`; esta documentación describe una línea base, no garantiza que producción siga en el mismo commit meses después.
-2. Abrir el repositorio **ItsSilva/Moni**. Leer `package.json`, `src/content.ts`, `src/main.tsx`, `src/ProductPreview.tsx`, `src/styles.css`, `src/attribution.ts`, `src/analytics.ts`, `server/research.ts` y `vercel.json`.
-3. Comprobar acceso real a GitHub, al proyecto correcto de Vercel, a la página publicada y al Figma identificado abajo. Registrar qué conexiones permiten lectura, edición y despliegue. No asumir que un enlace público equivale a permisos administrativos.
-4. Localizar la carpeta **Social** indicada por el usuario dentro de su carpeta de trabajo de Codex. Revisar anuncios en video y posts de Instagram. No iniciar una reinterpretación del producto sin verla.
-5. Leer las nueve skills incluidas en `.agents/skills/`, empezando por sus `SKILL.md`. Verificar su detección en la sesión de Codex. No sustituir la instalación por mencionar nombres en un prompt.
-6. Capturar A y B antes de cambios, en móvil y escritorio, con `test=1`. Guardar una comparación de las pantallas de app y de las piezas de Social. Las capturas de referencia deben corresponder a la versión realmente abierta.
-7. Ejecutar la línea base de pruebas. Separar resultados reales, mocks y verificaciones que no puedan ejecutarse.
-8. Preparar una auditoría visual con problemas concretos y evidencia. Priorizar jerarquía, composición, ritmo, calidad responsive y estados del formulario.
-9. Implementar el rediseño de ambas variantes conservando sus diferencias de mensaje. No modificar la API, el esquema de datos o la metodología como efecto secundario de un cambio visual.
-10. Probar, comparar con Social, revisar el diff, publicar dentro de la autorización existente y comprobar la versión final en producción.
-
-La tarea actual de preparación **no rediseña la página ni instala Meta Pixel**: deja documentación, skills y una línea base para ejecutar esa siguiente etapa correctamente.
+**Puntos de entrada:** cambio de landing → secciones 5, 8, 9, 11 y 20; cambio de pantallas/Figma → 3.4 y 5.5; formulario/datos → 13–17; Meta Pixel → 18; despliegue → 21. El prompt de la sección 23 permite concretar una nueva tarea sin depender de Codex.
 
 ## 2. Contexto y decisiones
 
@@ -60,9 +58,9 @@ Moni es una propuesta académica de tarjeta débito y app para que padres, madre
 
 La página busca validar interés mediante una lista de espera. No abre cuentas, emite tarjetas, recibe depósitos, cobra dinero ni garantiza participación en un piloto. Las pantallas del producto son conceptuales y sus cifras son de demostración.
 
-### 2.2 Objetivo de esta fase
+### 2.2 Dirección de producto vigente
 
-Elevar la calidad de ejecución de la landing: que se perciba cuidada, coherente, clara, profesional y propia de Moni. La referencia bancaria se aplica al nivel de diseño y a la claridad de la comunicación; no autoriza inventar licencias, respaldo financiero, alianzas, métricas comerciales o funcionalidades operativas.
+Mantener y mejorar la calidad de ejecución de la landing: que se perciba cuidada, coherente, clara, profesional y propia de Moni. La referencia bancaria se aplica al nivel de diseño y a la claridad de la comunicación; no autoriza inventar licencias, respaldo financiero, alianzas, métricas comerciales o funcionalidades operativas.
 
 El usuario ya creó videos para publicidad y publicaciones de Instagram. La web debe ser la continuación visual de esas piezas. No se busca renovar la identidad de marca ni diseñar una app nueva.
 
@@ -71,14 +69,14 @@ El usuario ya creó videos para publicidad y publicaciones de Instagram. La web 
 | Tema | Decisión vigente |
 | --- | --- |
 | Nombre público | Moni Bank |
-| Contacto | `monibank.proyecto@gmail.com` |
+| Contacto | `monibank.proyecto@gmail.com`, solo en avisos de privacidad/accesibilidad; sin bloque de contacto en footer |
 | Dominio | Subdominio de Vercel; no consta dominio propio adquirido |
 | Variantes | A: control y acompañamiento; B: aprendizaje y ahorro |
 | Secuencia | Primero A; luego B; sin reparto aleatorio ni cambio automático |
 | Público del formulario | Solo adultos cuidadores |
 | Datos de menores | No solicitarlos ni incorporarlos a eventos |
 | Identidad visual | Conservar Outfit, logo, paleta y estilo del producto |
-| App de demostración | Conservar su interfaz, coherente con Social |
+| App de demostración | Conservar la versión de código registrada en product-baseline; hay discrepancias de tarjeta con Social (sección 6) |
 | Backend | Funciones de Vercel y Upstash Redis REST; ya operativo |
 | Canal publicitario previsto | Meta Ads; las campañas se administran fuera de este repositorio |
 | Meta Pixel | Todavía no implementado ni configurado |
@@ -111,7 +109,7 @@ El chat refiere una mentoría y comentarios de Figma. No se adjuntan aquí una t
 | Revolut | [Kids & Teens / padres y tutores](https://www.revolut.com/es-ES/revolut-kids-and-teens-parent-and-guardians/) | Referencia de producto familiar |
 | Social | Carpeta local proporcionada por el usuario | Videos y posts que condicionan el rediseño |
 
-El enlace de Figma omitido en el último mensaje se recupera del enlace previo y del README existente. Los nodos se conservan como referencias del proyecto; reabrirlos y verificar que siguen siendo los correctos antes de intervenir. En esta actualización documental no se realizó una auditoría nueva de sus comentarios.
+Los nodos A/B se confirmaron mediante metadata de Figma el 26/10/2026. No están sincronizados con todos los cambios publicados: consultar la sección 3.4 antes de implementar desde ellos. Los comentarios de mentoría siguen sin verificarse.
 
 ### 3.2 Identificación de infraestructura
 
@@ -127,13 +125,13 @@ Estos identificadores orientan las herramientas, pero **no son credenciales**:
 
 ### 3.3 Qué significa tener acceso en la nueva sesión
 
-Un README puede proporcionar contexto y destinos; no transfiere las sesiones autenticadas de ChatGPT a Codex. En el equipo o entorno de destino:
+Un README proporciona contexto y destinos; no transfiere sesiones autenticadas entre modelos, chats o equipos. En el entorno de destino:
 
 | Servicio | Comprobación necesaria | Si falta acceso |
 | --- | --- | --- |
 | GitHub | Leer `main` y comprobar capacidad de publicar en el repositorio autorizado | Conectar la cuenta/instalación correcta; conservar el trabajo local |
 | Vercel | Leer el proyecto, metadata de variables y último despliegue; capacidad de desplegar | Conectar Vercel o usar su CLI autenticada en el equipo correcto |
-| Figma | Abrir archivo, frames y comentarios relevantes | Solicitar acceso al archivo o un export de los comentarios faltantes |
+| Figma | Verificar por separado lectura de frames, edición y acceso a comentarios | Solicitar solo el permiso o contenido imprescindible; leer metadata no prueba permiso de edición ni lectura de comentarios |
 | Web | Abrir A/B, inspeccionar estados y realizar QA con `test=1` | Registrar el bloqueo concreto, sin declarar el sitio verificado |
 | Social | Leer archivos locales de la carpeta indicada | Solicitar su ruta real o montaje; no inferir su contenido |
 | Meta | Acceder al dataset/píxel y a Eventos de prueba cuando se implemente | Pedir identificador público del píxel y conexión apropiada; no contraseñas |
@@ -144,27 +142,57 @@ No copiar tokens, cookies, contraseñas, `.env.local` ni secretos dentro de este
 
 La autorización existente permite avanzar con el proyecto y sus correcciones. No es una autorización para contratar servicios de pago, publicar los originales de Social, cambiar de propietario, borrar datos del estudio o iniciar campañas con presupuesto no definido.
 
+### 3.4 Mapa de Figma y relación con código
+
+Archivo `Tzv22s3Pj865kCNPNwJNgS`, página `0:1`. Mapa comprobado por metadata el 26/10/2026; volver a resolver los IDs antes de editar, porque pueden cambiar si se reemplazan nodos.
+
+| Elemento | Nodo Figma | Correspondencia manual en código |
+| --- | --- | --- |
+| Landing A / Control de gastos | `1:2` | `variants.a` de `src/content.ts` y composición compartida de `src/main.tsx` |
+| Landing B / Aprendizaje | `12:259` | `variants.b` y la misma composición |
+| Producto y patrones / Mentoría 20 oct | `32:859`; grupo Producto `32:862` | Referencia de tarjeta, pantallas y beneficios |
+| Tarjeta débito | `32:885` | `DebitCard` en `src/ProductPreview.tsx`; `.debit-card` / `.card-*` y assets de `public/product/` |
+| App / Resumen, 280 × 600 | `32:921` | `Phone` con `view='limits'` |
+| App / Movimientos, 280 × 600 | `32:961` | `Phone` con `view='purchases'` |
+| App / Metas, 280 × 600 | `32:999` | `Phone` con `view='savings'` |
+| Beneficios: límites / compras / ahorro | `32:1010` / `32:1022` / `32:1031` | `BenefitPreview` y copy por variante |
+| Pregunta frecuente | `32:1038` | `questions()` en `src/content.ts` y `<details>` en `src/main.tsx` |
+
+Abrir un nodo con el enlace del archivo y `?node-id=32-921`, por ejemplo. No confundir las referencias actuales con los históricos `11:2` («Original antes de mentoría 3», oculto), `32:343` y `32:601` («Antes del 20 oct»).
+
+**Desincronización comprobada:** los frames actuales A/B aún contienen rótulos académicos en registro (`34:894`, `34:1117`) y footer (`12:257`, `12:357`), retirados de la web por instrucción posterior del usuario. Los cambios de landing, footer y logo del 25–26/10 se implementaron en código, sin actualizar el archivo Figma. No regenerar la web desde esos frames como si fueran la última versión aprobada. La decisión pública vigente, el código publicado y el nuevo SVG prevalecen para esos cambios; Figma conserva el diseño de referencia del producto.
+
+No hay sincronización automática Figma→React en el repositorio ni un comando para publicar pantallas desde Figma. Esta tabla es un mapa manual; cambiar un nodo no actualiza la web, y editar React no modifica Figma. Antes de una edición, inspeccionar si se trata de componente principal o instancia y sus usos; verificar propiedades y overrides para no cambiar solo una copia por accidente.
+
+**Acceso observado:** el MCP permite leer metadata/diseño. No se efectuó una escritura de prueba para demostrar permisos. No expone una herramienta de comentarios en esta sesión; la revisión visual anterior encontró un acceso de navegador que pedía registro. Por tanto, comentarios y su resolución permanecen sin verificar. Las notas visibles del lienzo no sustituyen los hilos de comentarios.
+
+Si el entorno ofrece skills oficiales de Figma, leer la requerida por la operación antes de usar sus herramientas: implementación desde Figma necesita contexto de diseño y captura, no solo metadata; una edición de lienzo requiere el flujo de edición correspondiente. Las nueve skills del repo no proporcionan conexión ni permisos de escritura a Figma.
+
 ## 4. Estado verificado y límites de la evidencia
 
-### 4.1 Línea base funcional
+### 4.1 Estado comprobado al auditar
 
-| Elemento | Estado comprobado al preparar el traspaso |
+| Elemento | Evidencia al 26/10/2026 |
 | --- | --- |
-| Commit funcional base | `c54d4e5701a95220e05144c4ce48af8194103e52` |
-| Despliegue funcional | `dpl_Gh4rEd8KihV4QgVBRehFaFrbiVpw`, estado `READY`, Production |
-| Código | React + TypeScript + Vite; funciones `api/` |
-| Formulario | Habilitado en Production |
-| Preview / Development | Registro pausado; sin credenciales de la base productiva |
-| Redis | Conectado vía Marketplace, variables sensibles solo en Production |
-| Verificación de Redis | PING, escritura con Lua, lectura exacta, TTL y limpieza de clave temporal |
-| Prueba publicada A | Formulario completado con correo ficticio y `test=1`; mostró confirmación |
-| Prueba publicada B | Formulario completado con correo ficticio y `test=1`; mostró confirmación |
-| Pruebas automatizadas base | 34 unitarias/API y suite Playwright de 14 casos en dos perfiles |
-| CI base | [Ejecución 40214205152](https://github.com/ItsSilva/Moni/actions/runs/40214205152), correcta |
-| Logs de ejecución | Sin entradas error/fatal en la ventana revisada tras las pruebas; no equivale a garantía permanente |
-| Cambios de este traspaso | Documentación y skills; no rediseño visual ni cambio de contratos API |
+| Código vigente auditado | `009e5d0469fb24a5f539b192b43c181503fb6e6d`; HEAD local y `main` remoto coinciden antes de esta actualización documental |
+| Producción de ese código | `dpl_C28sxjFd51CLi89XvhK5qJfufMTo`, `READY`, SHA coincidente; URL estable de la sección 3 |
+| CI de ese commit | [Ejecución 40350901314](https://github.com/ItsSilva/Moni/actions/runs/40350901314), correcta |
+| Landing | Rediseño A/B, footer profesional, logo vectorial 89:32, sin contacto en footer ni rótulo académico público |
+| Formulario y configuración | Production `true`; Preview/Development `false`; responsable `Moni Bank`; correo público en avisos |
+| Redis | Variables sensibles solo en Production; metadata comprobada sin imprimir valores secretos |
+| Pruebas del código vigente | 34 unitarias/API, build y 22 E2E (11 casos × 2 perfiles), aprobados en la entrega del SVG y en CI |
+| Infraestructura en esa entrega | Build con PING, escritura Lua, lectura exacta, TTL y limpieza de su clave temporal; formularios A/B publicados con `test=1` y correos ficticios confirmados |
+| Producto y skills | Auditoría de hashes: 8 archivos protegidos y 91 archivos de las nueve skills coinciden, normalizando CRLF a LF |
+| Social | Tres originales locales inventariados; revisión visual de ambos videos documentada en `docs/visual-review.md` |
+| Figma | Metadata y mapa de nodos leídos; diferencias con la web identificadas; comentarios y permiso de edición no verificados |
+| Dependencias | Auditoría npm actual: 6 avisos en cadena de desarrollo; `npm audit --omit=dev`: 0 (sección 19.4) |
+| Alcance de esta auditoría | Código, contratos, pruebas, scripts, configuración, referencias, manifests y continuidad documental; solo README se modifica |
 
-La prueba de Redis realizó una lectura exacta de su propia clave temporal. La prueba de formulario observó la confirmación de la aplicación, cuyo servidor espera a que Redis confirme la escritura. **No se inspeccionaron manualmente los datos de personas reales ni se realizó una auditoría completa de la base.**
+El commit `c54d4e5701a95220e05144c4ce48af8194103e52` sigue siendo la base histórica de `product-baseline`, no el HEAD actual. No sustituir esa referencia solo para hacer pasar una comprobación de producto.
+
+La evidencia de formularios y comparación visual procede de la entrega inmediatamente anterior sobre el mismo código. Esta auditoría documental no repite envíos ni exporta contactos reales. La prueba de Redis lee únicamente su propia clave temporal; no equivale a una auditoría de toda la base. Tampoco se realizó pentesting ni se certifica seguridad o conformidad legal. Tras futuros commits, verificar el SHA y sus resultados actuales; estos IDs son evidencia fechada.
+
+Capturas `.qa/` y reportes locales están ignorados: no viajarán con un clon. GitHub conserva los artefactos de CI 14 días. Para obtener evidencia nueva, usar el procedimiento reproducible de la sección 20.4; no presentar rutas de otra máquina como capturas accesibles.
 
 ### 4.2 Lo que todavía no se debe afirmar
 
@@ -173,7 +201,7 @@ La prueba de Redis realizó una lectura exacta de su propia clave temporal. La p
 - Que Gmail recibe cada formulario: los datos se guardan en Redis, no se envían por correo.
 - Que los tests con mocks verifican por sí solos la infraestructura real.
 - Que se obtuvo certificación WCAG o se completó una auditoría manual con lector de pantalla.
-- Que las piezas de Social se revisaron aquí: no estaban disponibles en este workspace.
+- Que Figma, Social y la web son idénticos o que todos los comentarios de mentoría fueron revisados/resueltos.
 - Que una puntuación Lighthouse o métricas de usuarios reales ya fueron medidas; deberán recogerse.
 - Que la marca Moni Bank es una entidad jurídica o financiera autorizada.
 
@@ -183,7 +211,7 @@ La prueba de Redis realizó una lectura exacta de su propia clave temporal. La p
 
 Aplicar las instrucciones vigentes del usuario y las restricciones de este proyecto antes que preferencias genéricas de cualquier skill. Usar Social y Figma para contrastar continuidad. Si muestran versiones distintas, documentar la diferencia y aclarar únicamente qué archivo es la referencia aprobada; no rediseñar arbitrariamente la app para resolverla.
 
-**Una recomendación de Taste no autoriza cambiar la interfaz del producto, la paleta, la familia tipográfica, el copy de la hipótesis ni la representación académica.**
+**Una recomendación de Taste no autoriza cambiar la interfaz del producto, la paleta, la familia tipográfica, el copy de la hipótesis ni las condiciones de la propuesta de producto.**
 
 ### 5.2 Marca a conservar
 
@@ -199,7 +227,8 @@ Aplicar las instrucciones vigentes del usuario y las restricciones de este proye
 | Rosa | `#EEB1E4` | Acento existente |
 | Azul oscuro | `#111E3E` | Sección de demostración y producto |
 | Bordes | `#7C879B` | Token actual; cualquier ajuste debe preservar controles legibles |
-| Logotipo | `public/moni-logo.svg` | No redibujar, deformar, recolorear ni sustituir |
+| Logo de cabecera/footer | `public/moni-logotype.svg` | Export nuevo del usuario; viewport 89×32, `height: auto`; no deformar |
+| Logo interno / favicon | `public/moni-logo.svg` | Versión protegida; no sustituir al cambiar el logo externo |
 | Recursos de producto | `public/product/` | Conservar originales |
 
 Es válido mejorar la proporción de uso de colores, el espaciado y la jerarquía en la landing. No es válido reemplazar la identidad por el morado de Nu, una estética genérica de Revolut, otra fuente o un kit descargado.
@@ -222,15 +251,30 @@ A muestra límites; B muestra ahorro; ambas incluyen movimientos. No convertir e
 
 [docs/product-baseline.json](docs/product-baseline.json) registra hashes SHA-256 de componentes y assets protegidos en el commit base. Sirve para detectar modificaciones de archivos; **no reemplaza la comparación visual** ni cubre automáticamente el CSS heredado.
 
-### 5.4 Cambios que sí se esperan
+### 5.4 Cambios permitidos al trabajar en la landing
 
 Mejor composición del hero, jerarquía tipográfica en la página, anchos de texto, ritmo entre secciones, alineación, navegación, presentación de beneficios, transiciones de color, calidad de estados, responsive y accesibilidad. Se puede reorganizar código para hacerlo mantenible sin cambiar su comportamiento ni el aspecto del producto.
 
 Evitar secciones de relleno, estadísticas inventadas, testimonios ficticios, sellos de seguridad o logos de alianzas inexistentes, cintillos decorativos sin función, exceso de tarjetas, efectos de cursor, gradientes genéricos, animaciones permanentes y fotografías que se presenten como clientes reales sin serlo.
 
+### 5.5 Si el usuario pide modificar pantallas de la app
+
+La protección anterior es el estado por defecto para trabajos sobre la landing; no impide una nueva instrucción explícita del usuario sobre el producto. Esa instrucción prevalece dentro de su alcance. No pedir una segunda aprobación si ya identifica el cambio y la referencia; aclarar solo diferencias imprescindibles que sigan sin resolver.
+
+1. Determinar si la entrega pedida es Figma, web o ambas. Un ejemplo de posible modificación no es una orden de ejecutarla. Abrir los nodos de 3.4, leer contexto/capturas y comentarios disponibles, y comparar con `ProductPreview.tsx`, CSS y Social.
+2. Registrar la versión de partida y la modificación concreta autorizada. Si afecta a la diferencia de tarjeta (rosa/azul, ojos/sin ojos), resolver cuál se quiere antes de unificar. Conservar referencias anteriores; no sobrescribir los originales de Social.
+3. En Figma, intervenir los componentes e instancias correctos, preservando otros frames y versiones históricas. Revisar los tres estados, navegación, tarjeta y variantes que comparten componentes. No añadir pantallas o datos por inferencia.
+4. Si se pide implementación web, trasladar el cambio a `Phone`/`DebitCard`/`BenefitPreview`, assets y estilos pertinentes. La app aquí es una ilustración, no una aplicación bancaria funcional. Revisar `HeroProduct` (600×580) y `AppPreview` (600×576): `Canvas` adapta uniformemente artboards mediante ResizeObserver; no alterar sus proporciones para encajar un diseño.
+5. Comparar antes/después: el cambio autorizado debe verse y el resto permanecer estable. Probar A/B, vistas `limits`, `purchases`, `savings`, beneficios y móvil/escritorio. Los hashes antiguos cambiarán si se modifica un archivo protegido: explicar el diff, no ocultarlo regenerándolos primero. Actualizar baseline, documentación y pruebas solo después de verificar la nueva referencia aprobada y cuando ese cambio esté dentro del encargo.
+6. Entregar enlaces a nodos modificados, capturas, archivos/commit y pruebas. Si se cambió solo Figma, declarar que producción sigue igual; si se cambió solo código, registrar la desincronización pendiente. Publicar únicamente el alcance autorizado.
+
 ## 6. Carpeta Social y continuidad de campaña
 
-El usuario informó que existe una carpeta llamada **Social** dentro de la carpeta donde trabaja con Codex. Contiene los videos de publicidad y los posts de Instagram ya creados. La ruta absoluta y el inventario no se conocen en este entorno; no afirmar que forma parte del repositorio ni que fue descargada.
+En este equipo, Social está junto al repo: `Moni Back App/Social`, accesible como `../Social`. Inventario confirmado: `InstagramPostsFeed.jpeg` (946×1224), `TikTokReel1.mp4` (1080×1920, 30 fps, 18,07 s) y `TikTokReel2.mp4` (1080×1920, 30 fps, 11,07 s). No está en GitHub y otro entorno necesita su propia copia autorizada.
+
+La entrega del 25/10 revisó el JPEG y la secuencia completa de ambos videos con fotogramas cada 0,5 s y decodificación hasta EOF; no transcribió el audio. Ver matriz y evidencia en [docs/visual-review.md](docs/visual-review.md). La auditoría del 26/10 reconfirma los archivos y consulta esa revisión; no afirma una nueva reproducción de los videos.
+
+**Discrepancia pendiente:** Social muestra tarjetas con ojos y una tarjeta rosa en Reel 2; Figma/código muestran tarjeta azul sin ojos. Las pantallas finales de Reel 1 corresponden a las tres vistas existentes, con importes intermedios animados en el anuncio. Para los trabajos de landing se conserva el producto de main; eso no declara resuelta la identidad de la tarjeta. El nuevo `Logotipo.svg` fue autorizado para cabecera/footer, no para sustituir logos dentro del producto.
 
 ### 6.1 Protocolo de revisión
 
@@ -267,9 +311,9 @@ La dirección deseada combina claridad editorial, espacio bien utilizado, produc
 
 ### 8.1 Instalación incluida en el repositorio
 
-Las skills están incorporadas **a nivel de proyecto** en `.agents/skills/`. Se copiaron desde los repositorios originales, con sus archivos auxiliares y licencias MIT. No se ejecutaron sus scripts ni se aplicó un rediseño durante esta preparación.
+Las skills están incorporadas **a nivel de proyecto** en `.agents/skills/`. Se copiaron desde los repositorios originales, con sus archivos auxiliares y licencias MIT. Su uso en el rediseño ya está documentado en `docs/visual-review.md`, incluidos los fallos/excepciones del inspector Taste; no confundir la instalación original con su ejecución posterior.
 
-Al clonar la versión actual de Moni, los archivos viajan con el repositorio. No hace falta reinstalar globalmente ni descargar versiones flotantes antes de empezar. La nueva sesión debe comprobar que Codex las detecta; si no, reabrir la sesión/proyecto y leer sus rutas explícitas. No se afirma que una sesión de Codex en otro equipo ya las haya cargado.
+Al clonar la versión actual de Moni, los archivos viajan con el repositorio. No hace falta reinstalar globalmente ni descargar versiones flotantes antes de empezar. La nueva sesión debe comprobar cómo carga instrucciones su modelo; si no detecta las skills, leer sus rutas explícitas. No se afirma que otro modelo o equipo ya las haya cargado.
 
 | Skill | Ruta | Función en Moni |
 | --- | --- | --- |
@@ -320,7 +364,7 @@ No hace falta instalar más estilos genéricos, nuevos frameworks o varias libre
 
 ## 9. Dirección del rediseño por sección
 
-Las siguientes son tareas de la próxima fase, **no cambios ya implementados**.
+El rediseño inicial ya está implementado (secciones 25–26). Esta tabla orienta futuras mejoras solicitadas; no es una lista de trabajos pendientes por repetir.
 
 | Sección | Objetivo | Mantener | Mejoras que evaluar |
 | --- | --- | --- | --- |
@@ -331,7 +375,7 @@ Las siguientes son tareas de la próxima fase, **no cambios ya implementados**.
 | Demostración | Explicar el acompañamiento sin simular un servicio activo | App protegida y nota de demostración | Composición externa, lectura de pantallas, transición entre secciones |
 | FAQ | Resolver objeciones reales | Respuestas sobre tarifas no definidas, entrega y alcance | Espaciado, targets, foco y divulgación clara |
 | Formulario | Registro sencillo, accesible y confiable | Campos, validación, consentimiento y estados reales | Jerarquía, ayudas, contraste y respuesta de interacción |
-| Pie y diálogos | Cierre coherente e información localizable | Proyecto académico, privacidad, accesibilidad y correo | Alineación, lectura y adaptación móvil |
+| Pie y diálogos | Cierre coherente e información localizable | Logo SVG, lema, navegación, privacidad y accesibilidad; contacto solo dentro de avisos | Alineación, lectura y adaptación móvil, sin restaurar rótulo académico ni contacto en footer |
 
 No convertir cada sección en el mismo patrón de título y tres tarjetas. Tampoco eliminar información útil solo para que la captura se vea minimalista. Un cambio en el orden narrativo debe aplicarse de forma comparable a A y B, conservando el tratamiento experimental.
 
@@ -402,7 +446,8 @@ No se utiliza Next.js, Tailwind, shadcn/ui, un CMS, una base SQL o una librería
 | `src/main.tsx` | Composición, CTA, formulario, estados, FAQ y diálogos |
 | `src/content.ts` | Copy, beneficios, orden y FAQs por variante |
 | `src/ProductPreview.tsx` | Tarjeta y pantallas de producto protegidas |
-| `src/styles.css` | Tokens, landing, app, responsive y movimiento reducido |
+| `src/styles.css` | Tokens y estilos base compartidos, producto, responsive y movimiento reducido; cambios globales pueden alterar la app |
+| `src/landing.css` | Composición visual de landing, header/footer y microinteracciones; importado después de styles.css |
 | `src/attribution.ts` | Variante, UTM, identidad del navegador y exposición cruzada |
 | `src/analytics.ts` | Configuración pública, visita y eventos de primera parte |
 | `api/lead.ts` | Validación y escritura del registro |
@@ -410,9 +455,12 @@ No se utiliza Next.js, Tailwind, shadcn/ui, un CMS, una base SQL o una librería
 | `api/event.ts` | Persistencia de eventos permitidos |
 | `server/research.ts` | Contratos, HMAC, conexión REST, límites y script Lua |
 | `scripts/check-storage.mjs` | Comprobación real de Redis durante build Vercel |
+| `scripts/capture-visual.mjs` | Capturas A/B y clones normalizados del producto en `.qa/`; procedimiento en 20.4 |
 | `scripts/export-results.mjs` | Exportación privada de cohorte real v2 |
 | `scripts/delete-contact.mjs` | Eliminación de contacto por correo recibido en stdin |
-| `public/moni-logo.svg` | Logo actual |
+| `public/moni-logotype.svg` | Logo vectorial vigente de cabecera/footer; origen `../Logotipo.svg` |
+| `public/moni-logo.svg` | Logo protegido dentro del producto y favicon; no confundir con el anterior |
+| `public/moni-logotype.png`, `public/moni-mascot.svg` | Recursos heredados sin uso en la página actual; no restaurarlos por inferencia |
 | `public/product/` | Assets exportados del producto |
 | `tests/research.unit.test.ts` | Validación, atribución, API y almacenamiento simulado |
 | `tests/landing.e2e.ts` | Navegación, accesibilidad, responsive, estados y medición simulada |
@@ -423,7 +471,9 @@ No se utiliza Next.js, Tailwind, shadcn/ui, un CMS, una base SQL o una librería
 | `ACCESSIBILITY.md` | Alcance de accesibilidad y revisión manual pendiente |
 | `.agents/skills/` | Nueve skills versionadas; fuera del runtime público |
 | `docs/skills-lock.json` | Procedencia y hashes de las skills |
-| `docs/product-baseline.json` | Línea base de componentes/assets protegidos |
+| `docs/product-baseline.json` | Línea base de componentes/assets protegidos; no incluye CSS compartido |
+| `docs/visual-review.md`, `docs/footer-review.md` | Revisiones fechadas, decisiones y límites; el footer-review precede al cambio posterior a SVG/sin contacto |
+| `index.html` | Idioma, título, descripción para buscadores y favicon |
 | `AGENTS.md` | Reglas breves para agentes que trabajen en el repositorio |
 
 ### 11.3 Recorrido de una solicitud
@@ -436,7 +486,7 @@ Los tokens de Redis nunca llegan al cliente. No hay API pública de exportación
 
 ### 12.1 Preparación
 
-Desde una copia del repositorio, con una versión compatible de Node:
+Desde la carpeta `Moni` del repositorio (no desde `Moni Back App`), con Git y Node compatible instalados:
 
 ```sh
 npm ci
@@ -490,7 +540,7 @@ Todas las variables `VITE_` son públicas: nunca poner secretos bajo ese prefijo
 
 El flag actual pausa cuando vale exactamente la cadena `false`. El build de comprobación exige configuración completa cuando vale exactamente `true`. Utilizar explícitamente esos dos valores; no confiar en un flag ausente o en variantes como `False`/`1`.
 
-No se requiere contraseña de Gmail, Google Workspace ni un dominio propio para el formulario. El correo publicado es un canal de consultas. El equipo debe mantenerlo accesible y atender solicitudes; no equivale a un servicio automático de email.
+No se requiere contraseña de Gmail, Google Workspace ni un dominio propio para el formulario. El correo se conserva en los avisos de privacidad/accesibilidad para solicitudes sobre datos y barreras; no se muestra como contacto del footer. El equipo debe mantenerlo accesible y atender solicitudes; no equivale a un servicio automático de email.
 
 El nombre de marca es el valor actualmente configurado. La identificación formal del responsable debe mantenerse conforme al acuerdo académico aplicable; este README no certifica que una marca sustituya por sí sola una identidad responsable.
 
@@ -580,7 +630,7 @@ No simular éxito con un temporizador, no hacer la escritura opcional, no borrar
 
 ### 15.1 Configuración existente
 
-La base `moni-registros` está conectada únicamente a Production. La metadata revisada indicó plan Free, sin auto-upgrade ni eviction, región `iad1` y credenciales sensibles. Verificar cuotas actuales en el proveedor al aumentar tráfico; no prometer que el plan o sus límites serán iguales en el futuro.
+La base `moni-registros` está conectada únicamente a Production. La metadata del traspaso original indicó plan Free, sin auto-upgrade ni eviction, región `iad1` y credenciales sensibles; el plan/cuotas no se volvieron a consultar al proveedor en la auditoría documental del 26/10. Verificar cuotas actuales en el proveedor al aumentar tráfico; no prometer que el plan o sus límites serán iguales en el futuro.
 
 ### 15.2 Espacios de claves
 
@@ -608,6 +658,7 @@ El servidor no persiste IP cruda: usa un HMAC para el rate limit. Esto describe 
 - Rate limit: ventana de 10 minutos y TTL de 600 segundos.
 - Clave de comprobación del build: 60 segundos como respaldo y eliminación al finalizar.
 - Lead repetido: incrementa `submissions` y actualiza exposición cruzada; conserva primer registro, respuestas originales, fecha, origen y TTL mediante Lua y `KEEPTTL`.
+- Visitas/eventos usan `SET ... NX`: conservan el primer registro de cada clave. Repetirlos no actualiza su fecha, UTM o exposición cruzada; no son un historial completo de navegación.
 - No se unifican automáticamente aliases de correo como puntos o `+etiqueta`.
 
 La actualización atómica evita duplicados por solicitudes simultáneas. No sustituirla por un GET seguido de SET no atómico.
@@ -648,9 +699,9 @@ Un registro elegible en v2 cumple la declaración de adulto cuidador, consentimi
 
 Con denominador cero, devolver no calculable. No mezclar visitas directas con campaña ni test con live. No confundir clics de Meta, sesiones, navegadores identificados y personas.
 
-El script actual agrega toda la cohorte live v2 por variante; **no implementa filtros de fecha, campaña, versión de diseño ni exclusión automática de exposición cruzada**. Para reportes por periodo se necesita una transformación privada explícita. Conservar las columnas de atribución y fechas para ello.
+El script actual agrega toda la cohorte live v2 por variante; **no implementa filtros de fecha, campaña, versión de diseño ni exclusión automática de exposición cruzada**. Para reportes por periodo se necesita una transformación privada explícita. Conservar las columnas de atribución y fechas para ello. Los registros no guardan el SHA o versión visual de la web; `noticeVersion` identifica el aviso, no el diseño. Mantener un registro externo de despliegues/fechas/creatividades para segmentar resultados, sin alterar retrospectivamente los datos.
 
-Revisar `eligibleWithoutRecordedVisit`, fallos de medición, duplicados, equipo/spam y cambios de creatividad. Como el contacto conserva su primera atribución, reenvíos posteriores no se reasignan a la campaña más reciente. No presentar los números exportados como un análisis estadístico ya validado.
+Revisar `eligibleWithoutRecordedVisit`, fallos de medición, duplicados, equipo/spam y cambios de creatividad. Como el contacto conserva su primera atribución, reenvíos posteriores no se reasignan a la campaña más reciente. El resumen por variante filtra `source=campaign`; los registros directos se separan. Un navegador puede registrar más de un correo, y una visita/evento puede fallar sin que falle el lead: la razón contactos/navegadores no es una probabilidad garantizada ≤100%. El frontend no garantiza reenvío automático de visitas fallidas. No presentar los números exportados como un análisis estadístico ya validado.
 
 ## 17. Exportación y solicitudes sobre datos
 
@@ -659,7 +710,7 @@ Revisar `eligibleWithoutRecordedVisit`, fallos de medición, duplicados, equipo/
 Solo en un equipo autorizado, cargar las credenciales por un mecanismo seguro en `.env.local` y crear el directorio de salida:
 
 ```sh
-mkdir -p exports
+node -e "require('node:fs').mkdirSync('exports', {recursive:true})"
 node --env-file=.env.local scripts/export-results.mjs ./exports/resultados.json
 ```
 
@@ -693,7 +744,7 @@ No ejecutar ese procedimiento solo para demostrar que funciona con contactos rea
 
 **No hay Pixel, ID de Pixel configurado, SDK de Meta, Conversions API, envío de eventos a Meta ni verificación de eventos en Meta documentada.** La medición actual es de primera parte y vive en Redis. Los anuncios pueden dirigir a enlaces UTM, pero esto no equivale a que Meta reciba conversiones de registro.
 
-El usuario quiere usar Meta Ads. La integración se debe trabajar como una tarea explícita con pruebas y configuración propia, manteniendo intacto el registro si un bloqueador impide cargar el píxel.
+Meta Pixel no es requisito técnico para recoger interés y analizar registros con la medición propia actual. Sí hace falta una integración apropiada si se quiere enviar conversiones de la web a Meta. No bloquear mejoras de la landing por esta ausencia. El usuario quiere usar Meta Ads; la integración se debe trabajar como una tarea explícita con pruebas y configuración propia, manteniendo intacto el registro si un bloqueador impide cargar el píxel.
 
 ### 18.2 Insumos necesarios
 
@@ -744,7 +795,7 @@ Si se requiere atribuir **altas nuevas deduplicadas**, diseñar una señal segur
 
 Preferir un módulo aislado que inicialice una sola vez, compruebe consentimiento/configuración/entorno y no afecte el guardado. Si la integración requiere bootstrap inline, evaluar nonce/hash o un módulo propio conforme a la CSP; no copiar un snippet sin revisar su efecto.
 
-La documentación oficial de Meta está enlazada al final. Su acceso produjo errores temporales al abrir algunas páginas durante esta preparación; las instrucciones concretas de instalación, consentimiento, dominios y validación deben verificarse nuevamente al implementar.
+La documentación oficial de Meta está enlazada al final. Su acceso produjo errores temporales al abrir algunas páginas durante el traspaso original; las instrucciones concretas de instalación, consentimiento, dominios y validación deben verificarse nuevamente al implementar.
 
 ### 18.7 Criterios para considerar Pixel terminado
 
@@ -788,7 +839,9 @@ Si se añaden medios, optimizar formato/tamaño, usar poster y carga apropiada. 
 
 Mantener secretos en servidor, cabeceras de seguridad, validación, honeypot, límites y respuestas sin enumeración. No crear un endpoint de lectura pública para facilitar el QA. No registrar cuerpos completos del formulario en logs.
 
-En el build base, `npm ci` informó **6 avisos de vulnerabilidades (2 moderados y 4 altos)**. No se completó una clasificación de su alcance o explotabilidad en esta tarea documental. Abrir una revisión de dependencias con el reporte actual, separar desarrollo/runtime y corregir de forma controlada; no ejecutar `npm audit fix --force` a ciegas ni presentar esos avisos como evidencia de una explotación del sitio.
+Auditoría repetida el 26/10/2026: `npm audit` informa **6 avisos (2 moderados y 4 altos)** en `@vercel/node` y su cadena de desarrollo (`@vercel/static-config`, `@fastify/busboy`, `ajv`, `path-to-regexp`, `undici`). `npm audit --omit=dev` informa **0**. Esto clasifica el árbol npm, no demuestra ausencia de riesgos en herramientas de desarrollo/build ni certifica el runtime administrado de Vercel.
+
+La solución automática propone cambiar a `@vercel/node@4.0.0` desde `24.0.2`: no se aplicó ese cambio mayor ni se modificó el lockfile. Pendiente evaluar versiones compatibles y ejecutar pruebas de servidor/build antes de corregir. No usar `npm audit fix --force` a ciegas ni describir avisos como prueba de una explotación.
 
 ## 20. Pruebas y criterios de aceptación
 
@@ -833,7 +886,32 @@ No actualizar los tests únicamente para aceptar una regresión. Los tests que e
 
 ### 20.3 Definición de terminado
 
-La próxima fase se considera completada cuando ambas variantes se ven profesionales y coherentes con Social, el producto permanece reconocible e intacto, las pruebas relevantes pasan, el flujo real de guardado funciona y la versión publicada se verifica. Entregar capturas comparables, cambios realizados, resultados reales y pendientes. Una captura bonita del hero no demuestra que la página completa esté terminada.
+Un cambio visual solicitado se considera completado cuando ambas variantes se ven profesionales y coherentes con Social, el producto permanece reconocible e intacto, las pruebas relevantes pasan, el flujo real de guardado funciona y la versión publicada se verifica. Entregar capturas comparables, cambios realizados, resultados reales y pendientes. Una captura bonita del hero no demuestra que la página completa esté terminada.
+
+### 20.4 Capturas y evidencia reproducible
+
+Con Chromium instalado, iniciar Vite en `127.0.0.1:4173` con configuración pública ficticia. Ejemplo PowerShell, sin credenciales Redis:
+
+```powershell
+$env:VITE_REGISTRATION_ENABLED='true'
+$env:VITE_DATA_CONTROLLER='Equipo de prueba'
+$env:VITE_CONTACT_EMAIL='qa@example.com'
+npm run dev -- --host 127.0.0.1 --port 4173
+```
+
+Desde otra terminal en el repo:
+
+```sh
+node scripts/capture-visual.mjs before http://127.0.0.1:4173
+# Después del cambio:
+node scripts/capture-visual.mjs after http://127.0.0.1:4173
+```
+
+El script captura A/B a 1440 y 390 px, página completa, hero y cuatro vistas normalizadas de producto. Escribe `.qa/before/` y `.qa/after/`, con `test=1` y movimiento reducido. Comparar imágenes, métricas y producto; no basta la existencia del archivo. El script **solo simula APIs cuando la URL contiene `127.0.0.1`**; no sustituirla por `localhost` suponiendo que tiene el mismo comportamiento. Contra una URL remota usa endpoints reales de prueba y puede crear visitas/eventos, aunque no envía formularios.
+
+La suite E2E amplía responsive/estados y usa dos perfiles Chromium; no prueba Safari real, toda la matriz de fallos de red ni un lector de pantalla. Los tests unitarios inspeccionan comandos y simulan Redis; no ejecutan por sí solos el Lua sobre el proveedor. No hay un comparador automático de imágenes ni un guard de hashes en CI: realizar esas comprobaciones cuando el cambio visual lo requiera. Normalizar CRLF→LF al verificar los manifests evita falsos positivos por el checkout de Windows.
+
+Para cambios exclusivamente documentales, verificar enlaces, consistencia con código y `git diff --check`; no repetir envíos al formulario sin un cambio funcional que lo justifique. CI y Vercel siguen ejecutándose al publicar. Distinguir en la entrega las pruebas nuevas de la evidencia anterior sobre código intacto.
 
 ## 21. Publicación, pausa y recuperación
 
@@ -876,42 +954,37 @@ Documentar qué versión y periodo estuvieron activos. Si se revierte una integr
 
 ## 22. Plan de ejecución y pendientes
 
-| Prioridad | Trabajo | Evidencia de cierre |
+**Completado:** rediseño de ambas landings; revisión de Social; footer y eliminación del rótulo académico público; SVG vectorial sin deformación; retirada del contacto del footer; preservación del producto, formulario y almacenamiento; verificación y publicación. No tratarlos como pendientes de la próxima IA.
+
+| Prioridad / condición | Pendiente real | Evidencia de cierre |
 | --- | --- | --- |
-| P0 | Accesos del entorno destino y carpeta Social | Recursos abiertos, archivos reales inventariados, límites declarados |
-| P0 | Línea base visual A/B y producto | Capturas y hashes comparables, sin datos personales |
-| P1 | Auditoría y rediseño de ambas landings | Mejoras de página completa, no solo hero; revisión contra Social |
-| P1 | Preservación funcional y accesibilidad | Pruebas, QA real, teclado y responsive |
-| P1 antes de seguimiento Meta | Definición de conversión, consentimiento, ID e integración Pixel | Evidencia en Eventos de prueba y ausencia de contaminación |
-| P1 técnica | Clasificar avisos de dependencias | Reporte actualizado y correcciones justificadas, sin actualización forzada |
-| P2 | Revisión manual con lector de pantalla y zoom | Registro de plataforma, pasos y barreras resueltas |
-| P2 | Medición de rendimiento y optimización | Resultados comparables y assets optimizados |
-| P2 | Consistencia de Node CI/Vercel | Versiones efectivas comprobadas tras decisión explícita |
-| P2 | Reporte por fechas/campañas/versiones si se necesita | Transformación privada reproducible; no mezcla de cohortes |
-| Opcional | Dominio propio, email automático, CAPI o dashboard privado | Solo con una necesidad acordada; no requisitos del rediseño |
+| En cada nuevo entorno | Comprobar conexiones y disponibilidad local de referencias | Accesos efectivos y límites declarados; sin asumir credenciales heredadas |
+| Antes de aplicar mentoría no leída | Acceso a comentarios de Figma | Hilos relevantes leídos y decisiones trazables; no confundirlos con notas del lienzo |
+| Si se pide sincronizar Figma | Incorporar allí los cambios posteriores de landing/footer/logo | Nodos y capturas concordantes; no regenerar la web desde el Figma desactualizado |
+| Si se cambia tarjeta/producto | Resolver versión aprobada frente a Social | Elección explícita y comparación; no unificación automática |
+| Técnica | Corregir de forma controlada los 6 avisos npm de desarrollo | Dependencias compatibles y reporte/pruebas actualizados |
+| Accesibilidad | NVDA/VoiceOver, zoom nativo y Safari/iPhone real | Plataforma, pasos y barreras documentados; no equivalencia con emulación Chromium |
+| Rendimiento | Medición de laboratorio y, cuando exista muestra, datos reales | LCP/INP/CLS y contexto de ejecución; no cifras inventadas |
+| Antes de seguimiento Meta | ID/dataset real, acceso a Events Manager, conversión, consentimiento, aviso y CSP | Criterios de sección 18; no es bloqueo para el estudio con datos propios |
+| Técnica, si se acuerda | Alinear Node de CI y Vercel | Versiones efectivas y compatibilidad verificadas |
+| Antes de comparar campañas | Fechas, audiencias, creatividades, versión desplegada y filtros del reporte | Análisis privado reproducible; sin mezcla de cohortes o exposición cruzada silenciosa |
+| Opcional, por petición | Dominio propio, correo automático, CAPI o panel privado | Necesidad y alcance explícitos; no requisitos de la landing |
 
-No crear autenticación bancaria, onboarding financiero, pagos, KYC, una app real o un nuevo backend en esta fase. No habilitar ni presupuestar anuncios sin la configuración que el equipo defina. No presentar el rediseño como evidencia de validación del negocio.
+No crear por inferencia autenticación bancaria, pagos, KYC, una app operativa, nuevas bases o campañas. La lista de pendientes informa futuras decisiones, no autoriza ejecutarlas todas.
 
-### Entrega que debe hacer Codex
+### Entrega de una próxima tarea
 
-- Explicación breve de la dirección elegida y por qué sigue siendo Moni.
-- Auditoría con problemas resueltos y límites que permanecen.
-- Capturas antes/después de A y B, móvil y escritorio, con comprobación de producto intacto.
-- Archivos cambiados y dependencias nuevas, si las hay, con motivo.
-- Resultados de tests y comprobación real, diferenciando mocks.
-- Commit, URL de revisión y URL productiva verificada.
-- Estado explícito de Pixel: pendiente, preparado sin activar o activado y probado; nunca ambiguo.
-- README actualizado si cambió configuración, contrato, medición o procedimiento.
+Informar qué cambió y por qué, archivos/commit, verificaciones nuevas y sus límites, enlaces de producción o Figma según alcance y pendientes concretos. En cambios visuales incluir capturas comparables A/B y revisión del producto. Si cambia configuración, contrato, medición, referencia aprobada o procedimiento, actualizar el README; no añadir entradas que contradigan secciones vigentes.
 
 ## 23. Prompt listo para retomar
 
-Copiar este texto al abrir el proyecto en Codex. No reemplaza la lectura de los documentos:
+Copiar al abrir el repo con cualquier modelo y reemplazar el marcador por una tarea concreta. No sustituye la lectura de documentación:
 
-> Continúa el proyecto Moni en ItsSilva/Moni. Lee completos README.md y AGENTS.md y verifica el estado actual de main, Vercel y la web. El formulario y Upstash Redis ya funcionan: conserva sus contratos, deduplicación, retención, medición y separación test/live. La siguiente tarea es elevar la calidad visual de ambas landings usando como referencias reales Nu Cuenta y Revolut Kids & Teens. Primero identifica la carpeta Social dentro de mi carpeta de Codex y revisa los videos publicitarios y posts de Instagram. Conserva siempre el estilo gráfico de Moni, Outfit, logo, paleta, tarjeta y, especialmente, la interfaz interna de la app que ya aparece en esos materiales. No generes una app nueva ni cambies las pantallas del producto. Usa las skills instaladas design-taste-frontend, better-interface con sus seis dependencias y find-animation-opportunities. Las reglas de marca y producto de Moni prevalecen sobre preferencias genéricas de esas skills. Audita, captura el antes, implementa mejoras de composición y responsive en ambas variantes, prueba, compara con Social y verifica el despliegue. A se usa primero y B después, sin cambio automático. Todas las pruebas del equipo llevan test=1. No presentes el proyecto académico como un banco operativo. Documenta los accesos que falten sin asumir que este README transfiere credenciales. Revisa también la sección de Meta Pixel y prepara su implementación sin activarlo con un ID inventado, sin consentimientos adecuados ni pruebas reales. Ya existe autorización para publicar las correcciones acordadas en main y desplegar en el proyecto Vercel existente; conserva mis archivos y no publiques los originales de Social. Al terminar, entrega evidencia visual, resultados de pruebas, enlaces verificados y pendientes concretos.
+> Continúa Moni en ItsSilva/Moni. Mi tarea actual es: [DESCRIBIR CAMBIO Y ENTREGA: CÓDIGO, FIGMA O AMBOS]. Lee completos README.md y AGENTS.md, y consulta docs/skills-lock.json y docs/product-baseline.json. Inspecciona primero el workspace y conserva cambios existentes; el repo debe estar en Moni, junto a Social. Confirma el estado de main y las conexiones disponibles sin asumir credenciales heredadas. Las landings y el footer ya están rediseñados, usan el SVG nuevo y no muestran la etiqueta académica ni contacto en footer. Figma conserva versiones anteriores en partes de la landing: usa el mapa y las decisiones vigentes del README. No ejecutes otra vez el rediseño ni los pendientes por inferencia. Conserva identidad, producto y datos fuera del alcance; si pido cambiar pantallas explícitamente, aplica el flujo 5.5 al destino solicitado y declara qué queda sincronizado. A es predeterminada, B requiere variant=b, primero se estudia A y luego B. Conserva validación, consentimiento, guardado real, deduplicación, retención y medición; todo QA publicado lleva test=1 y datos ficticios. No exportes contactos para revisar diseño ni publiques Social. Usa las skills pertinentes, verifica y entrega evidencia proporcional al cambio. Las correcciones acordadas pueden publicarse en main y el Vercel existente sin force push. Meta Pixel sigue pendiente; no activarlo sin configuración, consentimiento y pruebas. Actualiza documentación solo cuando corresponda e informa accesos imprescindibles faltantes con precisión.
 
 ## 24. Fuentes y trazabilidad
 
-Fuentes de contexto y evidencia: instrucciones del usuario en este proyecto; código del commit funcional `c54d4e5701a95220e05144c4ce48af8194103e52`; metadata/logs de Vercel; CI enlazada; prueba de formularios A/B en la página publicada. Los datos de acceso y fechas son una fotografía del momento del traspaso, no secretos ni promesas de disponibilidad futura.
+Fuentes de contexto y evidencia: instrucciones del usuario; código actual `009e5d0469fb24a5f539b192b43c181503fb6e6d` y base histórica `c54d4e5701a95220e05144c4ce48af8194103e52`; metadata de Figma y Vercel; CI enlazada; revisiones versionadas y pruebas A/B de la entrega previa. Los datos de acceso y fechas son una fotografía del momento del traspaso, no secretos ni promesas de disponibilidad futura.
 
 Referencias de diseño y skills:
 
@@ -924,7 +997,7 @@ Referencias de diseño y skills:
 
 Referencias técnicas para comprobar al implementar:
 
-- [Skills de Codex](https://developers.openai.com/codex/skills), actualmente redirigido a documentación de construcción de skills.
+- [Skills de Codex](https://developers.openai.com/codex/skills).
 - [Vite en Vercel](https://vercel.com/docs/frameworks/frontend/vite).
 - [Variables de Vercel](https://vercel.com/docs/environment-variables).
 - [API REST de Upstash](https://upstash.com/docs/redis/features/restapi).
@@ -932,7 +1005,7 @@ Referencias técnicas para comprobar al implementar:
 - [Conversion tracking de Meta](https://developers.facebook.com/documentation/meta-pixel/implementation/conversion-tracking).
 - [Control de consentimiento del Pixel](https://developers.facebook.com/documentation/meta-pixel/implementation/gdpr), como referencia técnica; no sustituye evaluar las reglas aplicables al estudio.
 
-Este documento distingue **estado implementado**, **instrucciones para la siguiente fase** y **pendientes**. Ante una contradicción con el código o los servicios actuales, comprobar la realidad, conservar los límites del usuario y actualizar la documentación con evidencia.
+Este documento distingue **estado implementado**, **procedimientos para futuras tareas** y **pendientes**. Ante una contradicción con el código o los servicios actuales, comprobar la realidad, conservar los límites del usuario y actualizar la documentación con evidencia.
 
 ## 25. Entrega visual del 25 de octubre de 2026
 
@@ -957,8 +1030,8 @@ Consultar el SHA de publicación, READY y comprobación de producción en la ent
 
 - A petición expresa del usuario, se retira la etiqueta «proyecto académico» de cabecera, registro, footer, privacidad y descripción para buscadores. `VITE_DATA_CONTROLLER` pasa a `Moni Bank` en Production/Preview/Development; requiere un nuevo despliegue. La documentación conserva el contexto de investigación y su historial. Esta decisión sustituye las indicaciones públicas anteriores sobre esa etiqueta.
 - Se mantienen los fines de investigación, consentimiento, retención de 180 días y la aclaración de propuesta de producto y lista de espera. No se añade ninguna afirmación de banco operativo. Es una corrección editorial: no cambia el tratamiento ni el contrato de consentimiento `moni-interest-v2`.
-- Footer compartido: marca y lema existente, navegación útil, contacto real y acceso a privacidad/accesibilidad; tres columnas en escritorio y estructura vertical en móvil. Sin estadísticas, alianzas, sellos o servicios inventados.
-- Logo de landing: nuevo export autorizado `../LogotipoMoni.png` (PNG RGBA 128×32, dibujo en 89×32). `public/moni-logotype.png` elimina solo el margen transparente, sin deformar ni redibujar. Cabecera y footer usan proporción 89:32 con altura automática. `public/moni-logo.svg`, tarjeta, pantallas, `ProductPreview.tsx` y `styles.css` permanecen intactos.
+- Primera revisión del footer (histórica): marca, lema, navegación, contacto y avisos en tres columnas. El ajuste posterior descrito arriba elimina contacto y pasa a dos columnas; no restaurar aquella composición. Sin estadísticas, alianzas, sellos o servicios inventados.
+- Primera sustitución del logo (histórica): `../LogotipoMoni.png` con margen transparente recortado en `public/moni-logotype.png`. Quedó sustituido en cabecera/footer por el SVG posterior. La proporción 89:32 y altura automática se mantienen; `public/moni-logo.svg`, tarjeta, pantallas, `ProductPreview.tsx` y `styles.css` permanecen intactos.
 - QA: 34 unitarias/API, build TypeScript/Vite y 22 E2E correctos. Revisión A/B a 320/390/768/1440 px: sin overflow ni infracciones axe en las reglas ejecutadas; enlaces, diálogos y retorno de foco correctos. El logo mantiene proporción medida en 320/390/1440. Cuatro capturas normalizadas del producto: cero píxeles diferentes frente al estado anterior.
 - Evidencia local ignorada: `.qa/footer-before/` y `.qa/footer-final/`; revisión detallada en [footer-review](docs/footer-review.md). Pruebas publicadas siempre con `test=1`; sin consultar contactos reales.
 - Meta Pixel sigue pendiente, sin activarse. No se requiere para validar interés con la medición propia actual; su incorporación futura debe seguir la sección 18.
