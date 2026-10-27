@@ -4,12 +4,16 @@ import '@fontsource/outfit/latin-400.css';
 import '@fontsource/outfit/latin-500.css';
 import '@fontsource/outfit/latin-600.css';
 import '@fontsource/outfit/latin-700.css';
+import '@fontsource/outfit/latin-800.css';
 import './styles.css';
-import './landing.css';
 import { attribution, contact, controller, configured, startMeasurement, track, type EventPlacement } from './analytics';
-import { questions, variants, WAITLIST_LABEL } from './content';
-import { HeroProduct, AppPreview, BenefitPreview } from './ProductPreview';
-function CTA({placement}:{placement:EventPlacement}){return <a className="button" href="#registro" onClick={()=>track('cta_click',placement)}>{WAITLIST_LABEL}</a>}
+import { KICKER, questions, variants, WAITLIST_LABEL } from './content';
+import { AppScreen, CardWithEyes, Moni, Word, useReveal, useTilt } from './Art';
+
+function CTA({placement,tone='blue'}:{placement:EventPlacement;tone?:'blue'|'yellow'}){return <a className={`button button-${tone}`} href="#registro" onClick={()=>track('cta_click',placement)}>{WAITLIST_LABEL}</a>}
+
+function Confetti(){return <span className="confetti" aria-hidden="true">{Array.from({length:14},(_,i)=><i key={i} style={{'--n':i} as React.CSSProperties}/>)}</span>}
+
 function Registration({openPrivacy}:{openPrivacy:()=>void}){
  const content=variants[attribution.variant];
  const [status,setStatus]=useState<'idle'|'sending'|'success'|'error'>('idle');const [message,setMessage]=useState('');const [errors,setErrors]=useState<Record<string,string>>({});const summary=useRef<HTMLDivElement>(null);const confirmation=useRef<HTMLDivElement>(null);
@@ -21,35 +25,72 @@ function Registration({openPrivacy}:{openPrivacy:()=>void}){
  setStatus('sending');setMessage('');try{const response=await fetch('/api/lead',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({email,city:d.get('city'),willingness:d.get('willingness'),adult:d.get('adult')==='on',consent:d.get('consent')==='on',website:d.get('website'),attribution})});if(!response.ok)throw new Error(response.status===429?'Espera unos minutos antes de volver a intentarlo.':'No pudimos guardar tu registro. Tus datos siguen en el formulario; inténtalo más tarde.');const saved=await response.json();if(saved.ok!==true)throw new Error('No pudimos confirmar el registro. Inténtalo más tarde.');setStatus('success');}catch(error){setStatus('error');setMessage(error instanceof Error?error.message:'No pudimos guardar el registro.');}}
  const validation=(name:string)=>({'aria-invalid':Boolean(errors[name]),'aria-describedby':errors[name]?`${name}-error`:undefined});
  const error=(name:string)=>errors[name]?<span className="field-error" id={`${name}-error`}>{errors[name]}</span>:null;
- return <section id="registro" className="register section" aria-labelledby="register-title"><div className="wrap split"><div className="registration-copy"><h2 id="register-title">Únete a la<br/>lista de espera.</h2><p>{content.registration}</p><p className="adult-note">Solo para personas adultas. No pedimos información bancaria.</p><p className="product-note">La tarjeta y la app son una propuesta de producto.</p></div>
- <div className="form-card"><div role="status" aria-live="polite" aria-atomic="true">{status==='success'&&<div className="success" tabIndex={-1} ref={confirmation}><span className="success-icon" aria-hidden="true">✓</span><h3>¡Gracias por dar el primer paso!</h3><p>Recibimos tu interés en Moni. Te contactaremos cuando haya información del futuro piloto.</p><p className="small">Si ya te habías registrado, conservaremos un único registro. Esto no abre una cuenta ni garantiza un cupo.</p></div>}</div>{status!=='success'&&<form noValidate aria-busy={status==='sending'} onSubmit={submit} onChange={()=>track('form_start','form')}><h3>Quiero unirme a Moni</h3><p className="small muted">Todos los campos son obligatorios.</p>
- {!configured&&<p className="notice" role="status">Estamos preparando la apertura del registro. Vuelve pronto para dejar tu interés.</p>}
- {Object.keys(errors).length>0&&<div className="error-summary" tabIndex={-1} ref={summary}><h4>Revisa estos campos para continuar:</h4><ul>{Object.entries(errors).map(([k,v])=><li key={k}><a href={`#${k}`}>{v}</a></li>)}</ul></div>}
- <div className="field"><label htmlFor="email">Correo electrónico</label><input id="email" name="email" type="email" autoComplete="email" inputMode="email" spellCheck={false} maxLength={254} required placeholder="tu@correo.com" {...validation('email')}/>{error('email')}</div>
- <div className="field"><label htmlFor="city">Ciudad</label><select id="city" name="city" required defaultValue="" {...validation('city')}><option value="" disabled>Selecciona tu ciudad</option><option value="cali">Cali</option><option value="other">Otra ciudad</option></select>{error('city')}</div>
- <div className="field"><label htmlFor="willingness">¿Considerarías un medio de pago supervisado?</label><select id="willingness" name="willingness" required defaultValue="" {...validation('willingness')}><option value="" disabled>Selecciona una respuesta</option><option value="yes">Sí</option><option value="maybe">Tal vez, necesito más información</option><option value="no">No por ahora</option></select>{error('willingness')}</div>
- <div className="trap" aria-hidden="true"><label htmlFor="website">Deja este campo vacío</label><input id="website" name="website" autoComplete="off" tabIndex={-1}/></div>
- <div className="check-field"><label><input id="adult" name="adult" type="checkbox" required {...validation('adult')}/><span>Soy mayor de 18 años y soy padre, madre o cuidador.</span></label>{error('adult')}</div>
- <div className="check-field"><label><input id="consent" name="consent" type="checkbox" required {...validation('consent')}/><span>Autorizo el uso de estos datos para la investigación y para recibir información del futuro piloto.</span></label><button type="button" className="text-button" onClick={openPrivacy}>Ver privacidad</button>{error('consent')}</div>
- <button className="button submit" type="submit" disabled={status==='sending'||!configured}>{status==='sending'?'Guardando tu interés…':WAITLIST_LABEL}</button><div role="status" aria-live="polite">{status==='sending'&&<p className="small">Estamos guardando tu registro.</p>}</div>{status==='error'&&<p className="field-error" role="alert">{message}</p>}<p className="small muted">Unirte es gratis. No abre una cuenta ni garantiza un cupo.</p></form>}</div></div></section>;
+ return <section id="registro" className="register section" aria-labelledby="register-title" data-reveal><div className="wrap register-grid">
+  <div className="registration-copy">
+   <h2 id="register-title" className="word-title"><Word tone="blue" tilt={-2}>Únete a la</Word>{' '}<br/><Word tone="white" tilt={1.5} index={1}>lista de espera.</Word></h2>
+   <p className="registration-lead">{content.registration}</p>
+   <div className="registration-notes"><p className="adult-note">Solo para personas adultas. No pedimos información bancaria.</p><p className="product-note">La tarjeta y la app son una propuesta de producto.</p></div>
+   <Moni name="nube" className="register-moni"/>
+  </div>
+  <div className="form-card"><div role="status" aria-live="polite" aria-atomic="true">{status==='success'&&<div className="success" tabIndex={-1} ref={confirmation}><span className="success-art"><Moni name="nube" className="success-moni"/><Confetti/></span><h3>¡Gracias por dar el primer paso!</h3><p>Recibimos tu interés en Moni. Te contactaremos cuando haya información del futuro piloto.</p><p className="small">Si ya te habías registrado, conservaremos un único registro. Esto no abre una cuenta ni garantiza un cupo.</p></div>}</div>{status!=='success'&&<form noValidate aria-busy={status==='sending'} onSubmit={submit} onChange={()=>track('form_start','form')}><h3>Quiero unirme a Moni</h3><p className="small muted">Todos los campos son obligatorios.</p>
+  {!configured&&<p className="notice" role="status">Estamos preparando la apertura del registro. Vuelve pronto para dejar tu interés.</p>}
+  {Object.keys(errors).length>0&&<div className="error-summary" tabIndex={-1} ref={summary}><h4>Revisa estos campos para continuar:</h4><ul>{Object.entries(errors).map(([k,v])=><li key={k}><a href={`#${k}`}>{v}</a></li>)}</ul></div>}
+  <div className="field"><label htmlFor="email">Correo electrónico</label><input id="email" name="email" type="email" autoComplete="email" inputMode="email" spellCheck={false} maxLength={254} required placeholder="tu@correo.com" {...validation('email')}/>{error('email')}</div>
+  <div className="field"><label htmlFor="city">Ciudad</label><select id="city" name="city" required defaultValue="" {...validation('city')}><option value="" disabled>Selecciona tu ciudad</option><option value="cali">Cali</option><option value="other">Otra ciudad</option></select>{error('city')}</div>
+  <div className="field"><label htmlFor="willingness">¿Considerarías un medio de pago supervisado?</label><select id="willingness" name="willingness" required defaultValue="" {...validation('willingness')}><option value="" disabled>Selecciona una respuesta</option><option value="yes">Sí</option><option value="maybe">Tal vez, necesito más información</option><option value="no">No por ahora</option></select>{error('willingness')}</div>
+  <div className="trap" aria-hidden="true"><label htmlFor="website">Deja este campo vacío</label><input id="website" name="website" autoComplete="off" tabIndex={-1}/></div>
+  <div className="check-field"><label><input id="adult" name="adult" type="checkbox" required {...validation('adult')}/><span>Soy mayor de 18 años y soy padre, madre o cuidador.</span></label>{error('adult')}</div>
+  <div className="check-field"><label><input id="consent" name="consent" type="checkbox" required {...validation('consent')}/><span>Autorizo el uso de estos datos para la investigación y para recibir información del futuro piloto.</span></label><button type="button" className="text-button" onClick={openPrivacy}>Ver privacidad</button>{error('consent')}</div>
+  <button className="button button-blue submit" type="submit" disabled={status==='sending'||!configured}>{status==='sending'?'Guardando tu interés…':WAITLIST_LABEL}</button><div role="status" aria-live="polite">{status==='sending'&&<p className="small">Estamos guardando tu registro.</p>}</div>{status==='error'&&<p className="field-error" role="alert">{message}</p>}<p className="small muted">Unirte es gratis. No abre una cuenta ni garantiza un cupo.</p></form>}</div></div></section>;
 }
+
+function Hero(){
+ const content=variants[attribution.variant];const stage=useRef<HTMLDivElement>(null);useTilt(stage);
+ return <section id="inicio" className="hero"><div className="wrap hero-grid">
+  <div className="hero-copy">
+   <h1 className="word-title"><span className="kicker">{KICKER}</span>{' '}<br/><Word tone="yellow" tilt={-2} index={1}>{content.lead}</Word>{' '}<br/><Word tone="red" tilt={1.5} index={2}>{content.key}</Word></h1>
+   <p className="hero-description">{content.description}</p>
+   <div className="hero-action"><CTA placement="hero" tone="yellow"/><p className="hero-note">Una propuesta para familias con niños de 8 a 14 años.</p></div>
+  </div>
+  <div className="hero-stage" ref={stage}>
+   <span className="hero-circle" aria-hidden="true"/>
+   <AppScreen screen={content.heroScreen} className="hero-phone" eager/>
+   <CardWithEyes className="hero-card"/>
+   <Moni name="nube" className="hero-nube"/>
+   <Moni name="pentagono" className="hero-pentagono"/>
+  </div>
+ </div></section>;
+}
+
 function App(){
- const content=variants[attribution.variant];const dialog=useRef<HTMLDialogElement>(null);const [modal,setModal]=useState<'privacy'|'accessibility'>('privacy');
- useEffect(startMeasurement,[]);
+ const content=variants[attribution.variant];const dialog=useRef<HTMLDialogElement>(null);const [modal,setModal]=useState<'privacy'|'accessibility'>('privacy');const [scrolled,setScrolled]=useState(false);
+ useEffect(startMeasurement,[]);useReveal();
+ useEffect(()=>{const on=()=>setScrolled(scrollY>8);on();addEventListener('scroll',on,{passive:true});return()=>removeEventListener('scroll',on);},[]);
  function open(type:'privacy'|'accessibility'){setModal(type);dialog.current?.showModal();}
- return <><a className="skip-link" href="#contenido">Saltar al contenido</a><header className="site-header"><nav className="wrap nav" aria-label="Principal"><a href="#inicio" className="brand" aria-label="Moni, inicio"><img className="landing-logo" src="/moni-logotype.svg" alt="Moni" width="89" height="32"/></a><div className="nav-links"><a href="#como-funciona">Cómo funciona</a><a href="#preguntas">Preguntas</a></div><CTA placement="header"/></nav></header>
- <main id="contenido" className="landing"><section id="inicio" className="hero"><div className="wrap hero-grid"><div className="hero-copy"><h1>{content.title.split('\n')[0]}<span className="hero-promise">{'\n'}{content.title.split('\n')[1]}</span></h1><p className="hero-description">{content.description}</p><div className="hero-action"><CTA placement="hero"/><p className="hero-note">Una propuesta para familias con niños de 8 a 14 años.</p></div></div><div className="hero-stage"><HeroProduct variant={attribution.variant}/></div></div></section>
- <div className="principles"><div className="wrap"><p>{content.principle}</p><span>{content.principles}</span></div></div>
- <section className="section benefits" aria-labelledby="benefits-title"><div className="wrap"><div className="section-heading"><h2 id="benefits-title">{content.benefitsTitle}</h2><p className="section-lead">{content.benefitsDescription}</p></div><div className="cards">{content.benefits.map(benefit=><article className={`benefit ${benefit.color}`} key={benefit.preview}><div className="benefit-copy"><h3>{benefit.title}</h3><p>{benefit.body}</p></div><div className="benefit-art"><BenefitPreview view={benefit.preview}/></div></article>)}</div></div></section>
- <section id="como-funciona" className="demo section" aria-labelledby="demo-title"><div className="wrap demo-grid"><div className="demo-copy"><h2 id="demo-title">{content.demoTitle}</h2><p>{content.demoDescription}</p><ol>{content.steps.map(step=><li key={step}>{step}</li>)}</ol><CTA placement="product"/><p className="demo-note">Vista previa de la app con datos de demostración.</p></div><AppPreview variant={attribution.variant}/></div></section>
- <section id="preguntas" className="section faq" aria-labelledby="faq-title"><div className="wrap faq-grid"><h2 id="faq-title">Lo que quieres saber sobre Moni.</h2><div className="faq-list">{questions(attribution.variant).map(([q,a])=><details key={q} open onToggle={e=>{if(e.currentTarget.open&&e.currentTarget.dataset.interacted)track('faq_open','faq');}}><summary onClick={e=>{e.currentTarget.parentElement!.dataset.interacted='true';}}>{q}<span className="faq-icon" aria-hidden="true"><img src="/product/imgContraer.svg" alt=""/></span></summary><p>{a}</p></details>)}</div></div></section>
- <Registration openPrivacy={()=>open('privacy')}/></main>
+ const [big,...support]=content.benefits;
+ return <><a className="skip-link" href="#contenido">Saltar al contenido</a><header className={`site-header${scrolled?' is-scrolled':''}`}><nav className="wrap nav" aria-label="Principal"><a href="#inicio" className="brand" aria-label="Moni, inicio"><img className="landing-logo" src="/moni-logotype.svg" alt="Moni" width="89" height="32"/></a><div className="nav-links"><a href="#como-funciona">Cómo funciona</a><a href="#preguntas">Preguntas</a></div><CTA placement="header"/></nav></header>
+ <main id="contenido" className="landing">
+  <Hero/>
+  <div className="principles"><div className="wrap principles-row"><p>{content.principle}</p><ul aria-label="Principios">{content.principles.map((p,i)=><li key={p} className={`chip chip-${i}`}>{p}</li>)}</ul></div></div>
+  <section className="section benefits" aria-labelledby="benefits-title"><div className="wrap">
+   <div className="section-heading"><h2 id="benefits-title">{content.benefitsTitle}</h2><p className="section-lead">{content.benefitsDescription}</p></div>
+   <div className="bento">
+    <article className={`benefit benefit-main tone-${big.tone}`} data-reveal><div className="benefit-copy"><h3>{big.title}</h3><p>{big.body}</p></div><AppScreen screen={big.screen} className="benefit-screen"/>{big.character&&<Moni name={big.character} className="benefit-moni"/>}</article>
+    <div className="benefit-side">{support.map(b=><article key={b.screen} className={`benefit tone-${b.tone}`} data-reveal><div className="benefit-copy"><h3>{b.title}</h3><p>{b.body}</p></div><AppScreen screen={b.screen} className="benefit-screen"/>{b.character&&<Moni name={b.character} className="benefit-moni"/>}</article>)}</div>
+   </div>
+  </div></section>
+  <section id="como-funciona" className="demo section" aria-labelledby="demo-title"><div className="wrap"><div className="demo-block" data-reveal>
+   <div className="demo-copy"><h2 id="demo-title">{content.demoTitle}</h2><p>{content.demoDescription}</p><ol>{content.steps.map(step=><li key={step}>{step}</li>)}</ol><div className="demo-action"><CTA placement="product" tone="yellow"/><p className="demo-note">Vista previa de la app con datos de demostración.</p></div></div>
+   <div className="demo-screens">{content.demoScreens.map((s,i)=><AppScreen key={s} screen={s} className={`demo-screen demo-screen-${i}`}/>)}</div>
+  </div></div></section>
+  <section id="preguntas" className="section faq" aria-labelledby="faq-title"><div className="wrap faq-grid"><div className="faq-heading"><h2 id="faq-title">Lo que quieres saber sobre Moni.</h2><Moni name="cuadro" className="faq-moni"/></div><div className="faq-list">{questions(attribution.variant).map(([q,a])=><details key={q} open onToggle={e=>{if(e.currentTarget.open&&e.currentTarget.dataset.interacted)track('faq_open','faq');}}><summary onClick={e=>{e.currentTarget.parentElement!.dataset.interacted='true';}}>{q}<span className="faq-icon" aria-hidden="true"/></summary><p>{a}</p></details>)}</div></div></section>
+  <Registration openPrivacy={()=>open('privacy')}/></main>
  <footer className="site-footer">
   <div className="wrap footer-main">
    <div className="footer-brand"><a href="#inicio" aria-label="Moni, volver al inicio"><img className="landing-logo" src="/moni-logotype.svg" alt="Moni" width="89" height="32"/></a><p className="footer-tagline">Su autonomía,<br/>tu compañía.</p></div>
    <nav className="footer-column" aria-label="Explora Moni"><h2>Explora Moni</h2><a href="#como-funciona">Cómo funciona</a><a href="#preguntas">Preguntas frecuentes</a><a href="#registro">Lista de espera</a></nav>
   </div>
-  <div className="wrap footer-bottom"><p>Moni Bank</p><div className="footer-policies"><button className="text-button" onClick={()=>open('privacy')}>Privacidad</button><button className="text-button" onClick={()=>open('accessibility')}>Accesibilidad</button></div><p className="footer-disclosure">Unirte a la lista de espera no abre una cuenta ni garantiza un cupo.</p></div>
+  <div className="wrap footer-bottom"><p>Moni Bank</p><p className="footer-disclosure">Unirte a la lista de espera no abre una cuenta ni garantiza un cupo.</p><div className="footer-policies"><button className="text-button" onClick={()=>open('privacy')}>Privacidad</button><button className="text-button" onClick={()=>open('accessibility')}>Accesibilidad</button></div></div>
  </footer>
  <dialog ref={dialog} aria-labelledby="modal-title" onClick={e=>{if(e.target===e.currentTarget)dialog.current?.close();}}><div className="modal-header"><h2 id="modal-title">{modal==='privacy'?'Tu información, con claridad.':'Una experiencia para más personas.'}</h2><button className="close" aria-label="Cerrar" onClick={()=>dialog.current?.close()}>×</button></div>{modal==='privacy'?<><p>Este es un registro de interés para la investigación y el futuro piloto de Moni Bank. No es la apertura de una cuenta financiera.</p><p><strong>Responsable:</strong> {controller||'El registro se habilitará cuando se publique la identidad del responsable.'}</p><p>Si autorizas, guardamos tu correo, ciudad, tu respuesta sobre el medio de pago, confirmación de mayoría de edad y los datos de la campaña de la que llegaste. Los usamos para analizar el interés y enviarte información del piloto.</p><p>Conservamos el registro por un máximo de 180 días. Solo el equipo responsable tiene acceso. El alojamiento y almacenamiento se realizan con Vercel y el proveedor de la base Redis configurada por el equipo. No vendemos estos datos ni pedimos datos personales de menores.</p><p>Puedes solicitar acceso, corrección, eliminación o retirar tu autorización{contact?<> escribiendo a <a href={`mailto:${contact}`}>{contact}</a></>:'. El contacto estará publicado antes de abrir el registro.'}</p><p>Para medir visitas usamos un identificador aleatorio de este navegador que caduca a los 30 días y recordamos si viste ambas variantes. Guardamos su versión protegida, variante, fecha y origen, además de si permaneces al menos 10 segundos con la página visible, pulsas un botón hacia el formulario, abres preguntas o comienzas a llenar el formulario, durante un máximo de 180 días. Esos eventos no incluyen lo que escribes en los campos. No usamos esta medición para publicidad personalizada ni instalamos píxeles o cookies de terceros.</p><p className="small">Versión del aviso: moni-interest-v2.</p></>:<><p>La página incluye navegación por teclado, etiquetas en formularios, mensajes de error asociados, foco visible, controles nativos y respeto por la preferencia de movimiento reducido.</p><p>Puedes ampliar el texto, navegar con Tab y cerrar este diálogo con Escape. Las preguntas frecuentes se abren y cierran con teclado. Las vistas de la app son ilustrativas.</p><p>{contact?<>Si encuentras una barrera, escríbenos a <a href={`mailto:${contact}`}>{contact}</a>.</>:'El canal de contacto se publicará antes de abrir el registro.'}</p></>}</dialog></>;
 }

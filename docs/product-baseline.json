@@ -1,14 +1,26 @@
 {
-  "baseline_commit": "c54d4e5701a95220e05144c4ce48af8194103e52",
-  "note": "Protected product components/assets; shared CSS and Social also require visual comparison.",
+  "baseline": "landing v2 · 27/10/2026 (commit que introduce public/app y src/Art.tsx)",
+  "note": "Assets de producto de la v2: pantallas de la app C y personajes de redes. No reemplaza la comparación visual.",
   "sha256": {
+    "public/app/screen-c03.webp": "ae55fcdaa4a326a1a0282cf7ae9de162c4262900c397d0b606b3dab9444b1e95",
+    "public/app/screen-c05.webp": "bfdb35daee62e776c528b2f2e41f28145d290a9bf4e0c2473aee41a14d00aaf0",
+    "public/app/screen-c06.webp": "d478e5b9813852adf732a75ff21ad1f8dd2da381e911541b4a617b286685a044",
+    "public/app/screen-c07.webp": "5a3e950264e439c54d4cd9905d0175ba6f20d127b7a69ea7aad9492dfc2faecf",
+    "public/app/screen-c10.webp": "9bb4f23faef6be131b7f39e672e29893e3feb8136ecab21f7044b5fd4228a9de",
+    "public/app/screen-c12.webp": "8cb8884cb891b39a3c192eae637c1b752f241ba2ae42b84758e2448fd387c7ec",
+    "public/app/screen-c13.webp": "cf68e5f8e7cdc9bbf0561c3e2d10f5a9203f6c6b857575ed5a024a7092daa32a",
+    "public/app/screen-c14.webp": "070e9fc8ca488d7cd37a0ce8788a40a5b97260e879ce1b8706031cab0391020e",
     "public/moni-logo.svg": "adfca9213a1d4c37de64bba832be7aef6f059955ac82d4f78fa9fc315a1b0c6a",
-    "public/product/headphones.svg": "4c80cf52bfc80dd9363d342a9791b77b57065462044d71ea5c4764eb9ca44952",
     "public/product/imgChip.svg": "7706a5fe5457b39edb97dbcf61ea583bc62786922949a9c288e2d78a5cb0ca5b",
-    "public/product/imgContraer.svg": "0eaeb833d3714485c5452b5f2ebba783d129a48927a7bf417e41dd02bb17ca7a",
-    "public/product/imgEllipse.svg": "85a4afdd468838cecf104e05e7f7d1ff5234339ce0d8d376947be8a2b40c41c6",
     "public/product/imgSinContacto.svg": "9795a9871aebfc518ea5b478e07f22dbd1a94d6af62e200294bb1cdbaf1c0372",
     "public/product/whiteLogo.svg": "c32e710743e7c9029e6fe320edec0e7c76d79f488a5469c72244e75ac7e875a1",
-    "src/ProductPreview.tsx": "4e015abe48453d24f55e5e48eafcc9ad75b1696e64c4689b2ad34277855a94fb"
+    "src/Art.tsx": "f867e87c5d8981f09a48da8caf3b5d1d16fb803c378dd880d8ae76e892decdb8",
+    "src/art/char-cuadro.svg": "35fb5773f0dcaa856fd1ce83e6afa58fad27194d0afbe83b7c08edb49f0b8021",
+    "src/art/char-flor.svg": "90a92f52784c1858376f96eac961988860a937fea471086675a60900db5d35a6",
+    "src/art/char-luna.svg": "cbcab4c07b8c9f5a9179dc45339725231c11a7473d218ae128ea5b0722a487a3",
+    "src/art/char-moneda.svg": "b304dc4bd051c1107fd894943498e56ad582505fe64bd1179a9bf82f678823a8",
+    "src/art/char-pentagono.svg": "0cbd8600e922e096d2c08f5e4da925be2b756bce129570923fcab71beaec7df6",
+    "src/art/eyes.svg": "8b4af97442de2a6ec0f061e636722d6a9146a3b6cb0a7ff52556deb1547aab1d",
+    "src/art/nube.svg": "9136516eebada77826a6b74ddbba4b223e49d0f6d2a4a38bc0cb5ceef9611a56"
   }
 }
