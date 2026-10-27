@@ -16,7 +16,7 @@ Lee README.md completo antes de cambiar la web. Es el documento de continuidad d
 ## Restricciones prioritarias del usuario
 
 - Conservar logo, Outfit, paleta y estilo gráfico de Moni.
-- No rediseñar la interfaz de app ni la tarjeta presentes en los anuncios. Proteger `src/ProductPreview.tsx`, `public/moni-logo.svg`, `public/product/` y los estilos de producto en `src/styles.css`.
+- Producto v2 (decisión de la usuaria, 27/10/2026): la web usa las pantallas de la app C exportadas a `public/app/`, la tarjeta coral con ojos y los personajes de redes (`src/Art.tsx`, `src/art/`). No redibujar pantallas a mano ni cambiar cifras sin cambiarlas en Figma; ver README 5.3.
 - Un cambio de CSS global puede modificar la app sin cambiar el componente. Comparar pantallas antes/después y contra Social.
 - Se permite mejorar composición externa, espaciado y escala uniforme responsive; no cambiar estructura, rótulos, cifras, colores, iconos o controles internos del producto.
 - Los hashes de `docs/product-baseline.json` ayudan a detectar cambios, pero no reemplazan QA visual.

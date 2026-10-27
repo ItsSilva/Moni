@@ -1,7 +1,8 @@
 # Moni · Su autonomía, tu compañía
 
-> **Continuidad para cualquier modelo o agente de IA — auditado el 26 de octubre de 2026.**
-> **Estado vigente:** ambas landings están rediseñadas y publicadas. A es la predeterminada; B requiere `?variant=b`. Cabecera y footer usan el SVG vectorial nuevo; el footer no contiene contacto. No mostrar «proyecto académico» en la web ni restaurar esa etiqueta desde versiones anteriores de Figma o documentación.
+> **Continuidad para cualquier modelo o agente de IA — actualizado el 27 de octubre de 2026 (landing v2, sección 27).**
+> **Landing v2:** por decisión explícita de la usuaria, la web adopta el lenguaje de las piezas de redes (bloques de palabra, personajes con ojos, tarjeta coral con ojos) y las pantallas de la app C «Equilibrio». El H1 aprobado es «Su primera tarjeta débito.» + «Tú acuerdas sus límites.» (A) / «Aprende a ahorrar contigo.» (B). Diseño en Figma, página «Landing v2 · Redes + App C» (`127:788`). Las secciones 5.3 y 10.1 reemplazan la protección y el copy anteriores.
+> **Estado anterior (26/10):** ambas landings están rediseñadas y publicadas. A es la predeterminada; B requiere `?variant=b`. Cabecera y footer usan el SVG vectorial nuevo; el footer no contiene contacto. No mostrar «proyecto académico» en la web ni restaurar esa etiqueta desde versiones anteriores de Figma o documentación.
 > **Esta entrega solo actualiza README.md.** La auditoría contrasta el código y los servicios del commit `009e5d0469fb24a5f539b192b43c181503fb6e6d`; no encarga otro rediseño ni cambios en Figma. Estado comprobado y límites en la sección 4; pendientes reales en la 22.
 
 Este documento permite continuar sin el chat original. Describe producto, decisiones, archivos, servicios, pruebas y pendientes. No contiene secretos ni transfiere credenciales. Las instrucciones vigentes del usuario determinan el alcance: los ejemplos de tareas futuras no autorizan su ejecución.
@@ -76,7 +77,9 @@ El usuario ya creó videos para publicidad y publicaciones de Instagram. La web 
 | Público del formulario | Solo adultos cuidadores |
 | Datos de menores | No solicitarlos ni incorporarlos a eventos |
 | Identidad visual | Conservar Outfit, logo, paleta y estilo del producto |
-| App de demostración | Conservar la versión de código registrada en product-baseline; hay discrepancias de tarjeta con Social (sección 6) |
+| App de demostración | Pantallas de la app C «Equilibrio» (Figma `101:2547`) exportadas a `public/app/` y tarjeta coral con ojos de las piezas de redes; decisión de la usuaria del 27/10/2026 que resuelve la discrepancia de la sección 6 |
+| Lenguaje visual (v2) | Campaña arriba (hero y registro con bloques de palabra y personajes), reglas de la app C abajo: un bloque saturado por sección, tintes para guiar, familia sobria en navy |
+| Encabezado A/B (v2) | Rótulo común «Su primera tarjeta débito.» en texto blanco; el H1 grande es la hipótesis: «Tú acuerdas sus límites.» (A) / «Aprende a ahorrar contigo.» (B), misma estructura y colores |
 | Backend | Funciones de Vercel y Upstash Redis REST; ya operativo |
 | Canal publicitario previsto | Meta Ads; las campañas se administran fuera de este repositorio |
 | Meta Pixel | Todavía no implementado ni configurado |
@@ -151,11 +154,12 @@ Archivo `Tzv22s3Pj865kCNPNwJNgS`, página `0:1`. Mapa comprobado por metadata el
 | Landing A / Control de gastos | `1:2` | `variants.a` de `src/content.ts` y composición compartida de `src/main.tsx` |
 | Landing B / Aprendizaje | `12:259` | `variants.b` y la misma composición |
 | Producto y patrones / Mentoría 20 oct | `32:859`; grupo Producto `32:862` | Referencia de tarjeta, pantallas y beneficios |
-| Tarjeta débito | `32:885` | `DebitCard` en `src/ProductPreview.tsx`; `.debit-card` / `.card-*` y assets de `public/product/` |
-| App / Resumen, 280 × 600 | `32:921` | `Phone` con `view='limits'` |
-| App / Movimientos, 280 × 600 | `32:961` | `Phone` con `view='purchases'` |
-| App / Metas, 280 × 600 | `32:999` | `Phone` con `view='savings'` |
-| Beneficios: límites / compras / ahorro | `32:1010` / `32:1022` / `32:1031` | `BenefitPreview` y copy por variante |
+| **Landing v2 (vigente)** | Página `127:788`: Desktop A `127:789`, Desktop B `130:1325`, Mobile A `134:1787`, éxito `134:7576`, notas de interacción `134:7612`, opciones de header `138:3020` | `src/main.tsx`, `src/styles.css`, `src/content.ts` |
+| Componentes de redes | Página «contenido» `44:788`: bloque de palabra `55:1159`, personajes `55:1161` (moneda), `55:1172` (pentágono), `55:1181` (flor), `55:1190` (media luna), `55:1200` (cuadro), nube `111:5190` | `Word`, `Moni` y `CardWithEyes` en `src/Art.tsx`; SVG en `src/art/` |
+| App C · pantallas | `105:3469` (C14 controles), `103:2832` (C05 mi tarjeta), `105:3210` (C12 resumen), `103:3069` (C07 metas), `105:3365` (C13 solicitudes), `103:2973` (C06 pausa), `104:3172` (C10 misión cumplida), `102:2820` (C03 inicio) | `public/app/screen-cXX.webp` (render 1,75× sin sombra) y `AppScreen` en `src/Art.tsx` |
+| Tarjeta débito (histórica) | `32:885` | Ya no se usa en la web; la tarjeta v2 es la coral con ojos (`CardWithEyes`) |
+| App / Resumen, Movimientos, Metas (históricas) | `32:921`, `32:961`, `32:999` | Sustituidas por las pantallas de la app C |
+| Beneficios: límites / compras / ahorro (históricos) | `32:1010` / `32:1022` / `32:1031` | Sustituidos por el bento de la v2 |
 | Pregunta frecuente | `32:1038` | `questions()` en `src/content.ts` y `<details>` en `src/main.tsx` |
 
 Abrir un nodo con el enlace del archivo y `?node-id=32-921`, por ejemplo. No confundir las referencias actuales con los históricos `11:2` («Original antes de mentoría 3», oculto), `32:343` y `32:601` («Antes del 20 oct»).
@@ -217,14 +221,17 @@ Aplicar las instrucciones vigentes del usuario y las restricciones de este proye
 
 | Token / recurso | Valor actual | Tratamiento |
 | --- | --- | --- |
-| Familia | Outfit | Conservar; pesos locales 400, 500, 600 y 700 |
+| Familia | Outfit | Conservar; pesos locales 400, 500, 600, 700 y 800 (800 solo para bloques de palabra) |
 | Azul principal | `#2667FF` | Color de acción y marca |
 | Azul hover | `#164ED1` | Estado actual de interacción |
 | Tinta | `#101828` | Texto principal |
 | Texto secundario | `#475467` | Usar con contraste comprobado |
 | Fondo suave | `#F2F5FF` | Superficie de marca |
 | Amarillo | `#F2ED6F` | Acento existente; no sustituir por una paleta genérica |
-| Rosa | `#EEB1E4` | Acento existente |
+| Rosa | `#EEB1E4` | Acento existente; protagonista de metas en B |
+| Coral | `#FF4D41` | De las piezas de redes; solo bloques grandes (texto blanco ≥ 24 px) y personajes |
+| Tintes | `#DCE4FF`, `#FFFBD6`, `#FCE6F7` | Fondos de apoyo de la app C; nunca compiten con el bloque saturado de la sección |
+| Profundidad de botones | sombra sólida 3 px `#164ED1` / `#CFA92A` | Como en la app C; se hunde al presionar |
 | Azul oscuro | `#111E3E` | Sección de demostración y producto |
 | Bordes | `#7C879B` | Token actual; cualquier ajuste debe preservar controles legibles |
 | Logo de cabecera/footer | `public/moni-logotype.svg` | Export nuevo del usuario; viewport 89×32, `height: auto`; no deformar |
@@ -233,23 +240,18 @@ Aplicar las instrucciones vigentes del usuario y las restricciones de este proye
 
 Es válido mejorar la proporción de uso de colores, el espaciado y la jerarquía en la landing. No es válido reemplazar la identidad por el morado de Nu, una estética genérica de Revolut, otra fuente o un kit descargado.
 
-### 5.3 Interfaz de app protegida
+### 5.3 Producto en la landing (v2, 27/10/2026)
 
-El archivo [src/ProductPreview.tsx](src/ProductPreview.tsx) contiene las vistas de límites, compras y ahorro, la tarjeta y sus composiciones. Conservar:
+La usuaria decidió que la web muestre el producto de las piezas de redes y de la app C. Esto sustituye la protección de `ProductPreview.tsx` (eliminado) y la decisión de congelar la tarjeta azul sin ojos.
 
-- Estructura interna de pantallas, navegación, rótulos, jerarquía y estilo de controles.
-- Tipografía, colores, iconografía, tamaños relativos, proporciones y disposición.
-- Contenido de demostración: límites, movimientos, progreso de ahorro y textos de las pantallas.
-- Diseño de la tarjeta, logo, chip y símbolo de pago sin contacto.
-- La distinción entre ilustración conceptual y controles realmente utilizables.
+- **Pantallas:** `public/app/screen-cXX.webp`, renders del Figma (tabla 3.4) a 1,75× sin la sombra del nodo; la sombra y el redondeo los pone `.app-screen`. Son imágenes con texto alternativo descriptivo y la aclaración de datos de demostración; no hay controles falsos en el orden de tabulación.
+- **Qué pantalla va dónde** está en `src/content.ts` (`heroScreen`, `benefits[].screen`, `demoScreens`). A: hero C14; beneficios C05, C12, C07; demo C13 y C06. B: hero C07; beneficios C03, C12, C14; demo C06 y C10.
+- **Tarjeta:** `CardWithEyes` en `src/Art.tsx`, en HTML/CSS con los assets de `public/product/`; sus rótulos van en SVG porque son parte del dibujo. Color coral como lo dejó la usuaria en el Figma de la v2.
+- **Personajes:** SVG de `src/art/` copiados de los componentes de redes, con el grupo `.eyes` para el parpadeo.
+- **Si cambian las pantallas en Figma:** volver a exportar el nodo (clonar, quitar efectos, captura a 1,75×, convertir a WebP) y reemplazar el archivo. No redibujar pantallas a mano en React ni cambiar cifras en la web sin cambiarlas en Figma.
+- No convertir estas ilustraciones en formularios o simuladores ni introducir comportamientos financieros reales.
 
-A muestra límites; B muestra ahorro; ambas incluyen movimientos. No convertir estas ilustraciones en formularios o simuladores nuevos ni introducir comportamientos financieros reales.
-
-**Permitido alrededor del producto:** mejorar la ubicación del bloque dentro de la landing, el espacio que lo rodea y su escala uniforme para adaptarlo al viewport. Cualquier recorte debe conservar legibilidad y no esconder contenido necesario. No cambiar los componentes internos para obtener una composición más llamativa.
-
-**Atención al CSS compartido:** cambiar variables globales, reglas de `strong`, `span`, `p`, tamaños tipográficos o selectores de producto puede modificar la app aunque `ProductPreview.tsx` no cambie. Revisar `.phone*`, `.debit-card`, `.card-*`, `.mini-logo`, `.white-logo`, `.phone-screen`, `.app-progress`, `.goal-*`, `.balance`, `.limit`, `.conversation`, `.benefit-preview`, `.purchase-row` y `.preview-line`. Aislar estilos de la landing cuando sea necesario.
-
-[docs/product-baseline.json](docs/product-baseline.json) registra hashes SHA-256 de componentes y assets protegidos en el commit base. Sirve para detectar modificaciones de archivos; **no reemplaza la comparación visual** ni cubre automáticamente el CSS heredado.
+[docs/product-baseline.json](docs/product-baseline.json) registra los hashes de los assets de producto de la v2. Sirve para detectar cambios de archivos; **no reemplaza la comparación visual**.
 
 ### 5.4 Cambios permitidos al trabajar en la landing
 
@@ -387,12 +389,14 @@ El formulario debe ser usable sin hover y sin esperar a que termine una animaci�
 
 | Elemento | A: control y acompañamiento | B: aprendizaje financiero |
 | --- | --- | --- |
-| Título | Su primera tarjeta débito. Con tu acompañamiento. | Su primera tarjeta débito. Para aprender contigo. |
+| Rótulo común | Su primera tarjeta débito. | Su primera tarjeta débito. |
+| Título (hipótesis, bloques grandes) | Tú acuerdas sus límites. | Aprende a ahorrar contigo. |
+| H1 completo | Su primera tarjeta débito. Tú acuerdas sus límites. | Su primera tarjeta débito. Aprende a ahorrar contigo. |
 | Apoyo | Conoce cómo tu hijo usa su dinero y acuerda límites de gasto desde tu app. | Ayuda a tu hijo a decidir qué gastar y qué ahorrar, con una tarjeta y una app para aprender juntos. |
 | Prioridad | Límites y compras visibles | Metas, ahorro y decisiones |
 | Orden de beneficios | Límites → compras → metas | Metas → compras → límites |
-| Pantalla protagonista | `limits` | `savings` |
-| Demostración común | También muestra `purchases` | También muestra `purchases` |
+| Pantalla protagonista | C14 · controles de tarjeta (límite) | C07 · mis metas (ahorro) |
+| Demostración | C13 solicitudes + C06 pausa antes de comprar | C06 pausa antes de comprar + C10 meta cumplida |
 | CTA | Únete a la lista de espera | Únete a la lista de espera |
 | Formulario y condiciones | Iguales | Iguales |
 
@@ -445,9 +449,10 @@ No se utiliza Next.js, Tailwind, shadcn/ui, un CMS, una base SQL o una librería
 | --- | --- |
 | `src/main.tsx` | Composición, CTA, formulario, estados, FAQ y diálogos |
 | `src/content.ts` | Copy, beneficios, orden y FAQs por variante |
-| `src/ProductPreview.tsx` | Tarjeta y pantallas de producto protegidas |
-| `src/styles.css` | Tokens y estilos base compartidos, producto, responsive y movimiento reducido; cambios globales pueden alterar la app |
-| `src/landing.css` | Composición visual de landing, header/footer y microinteracciones; importado después de styles.css |
+| `src/Art.tsx` | Bloques de palabra, personajes, tarjeta con ojos, pantallas de la app y hooks de movimiento (aparición, inclinación) |
+| `src/art/` | SVG de personajes y ojos (componentes de redes del Figma) |
+| `public/app/` | Pantallas de la app C exportadas del Figma (WebP) |
+| `src/styles.css` | Todo el CSS de la landing v2: tokens, secciones, responsive, movimiento y movimiento reducido (`landing.css` se integró aquí) |
 | `src/attribution.ts` | Variante, UTM, identidad del navegador y exposición cruzada |
 | `src/analytics.ts` | Configuración pública, visita y eventos de primera parte |
 | `api/lead.ts` | Validación y escritura del registro |
@@ -907,7 +912,7 @@ node scripts/capture-visual.mjs before http://127.0.0.1:4173
 node scripts/capture-visual.mjs after http://127.0.0.1:4173
 ```
 
-El script captura A/B a 1440 y 390 px, página completa, hero y cuatro vistas normalizadas de producto. Escribe `.qa/before/` y `.qa/after/`, con `test=1` y movimiento reducido. Comparar imágenes, métricas y producto; no basta la existencia del archivo. El script **solo simula APIs cuando la URL contiene `127.0.0.1`**; no sustituirla por `localhost` suponiendo que tiene el mismo comportamiento. Contra una URL remota usa endpoints reales de prueba y puede crear visitas/eventos, aunque no envía formularios.
+El script captura A/B a 1440 y 390 px, página completa, hero y, a 1440 px, el escenario del hero y las pantallas de la demo (v2). Escribe `.qa/before/` y `.qa/after/`, con `test=1` y movimiento reducido. Comparar imágenes, métricas y producto; no basta la existencia del archivo. El script **solo simula APIs cuando la URL contiene `127.0.0.1`**; no sustituirla por `localhost` suponiendo que tiene el mismo comportamiento. Contra una URL remota usa endpoints reales de prueba y puede crear visitas/eventos, aunque no envía formularios.
 
 La suite E2E amplía responsive/estados y usa dos perfiles Chromium; no prueba Safari real, toda la matriz de fallos de red ni un lector de pantalla. Los tests unitarios inspeccionan comandos y simulan Redis; no ejecutan por sí solos el Lua sobre el proveedor. No hay un comparador automático de imágenes ni un guard de hashes en CI: realizar esas comprobaciones cuando el cambio visual lo requiera. Normalizar CRLF→LF al verificar los manifests evita falsos positivos por el checkout de Windows.
 
@@ -1035,3 +1040,12 @@ Consultar el SHA de publicación, READY y comprobación de producción en la ent
 - QA: 34 unitarias/API, build TypeScript/Vite y 22 E2E correctos. Revisión A/B a 320/390/768/1440 px: sin overflow ni infracciones axe en las reglas ejecutadas; enlaces, diálogos y retorno de foco correctos. El logo mantiene proporción medida en 320/390/1440. Cuatro capturas normalizadas del producto: cero píxeles diferentes frente al estado anterior.
 - Evidencia local ignorada: `.qa/footer-before/` y `.qa/footer-final/`; revisión detallada en [footer-review](docs/footer-review.md). Pruebas publicadas siempre con `test=1`; sin consultar contactos reales.
 - Meta Pixel sigue pendiente, sin activarse. No se requiere para validar interés con la medición propia actual; su incorporación futura debe seguir la sección 18.
+
+## 27. Landing v2 · lenguaje de redes y app C · 27 de octubre de 2026
+
+- **Pedido de la usuaria:** mejorar el diseño con el lenguaje del contenido de redes sin perder el foco de la investigación, diseñarlo primero en Figma y construirlo en React con más interacción. Decisiones explícitas: producto de redes/app C (tarjeta con ojos, pantallas C), personajes con ojos «como en redes», revisión en Figma, sin campaña corriendo todavía.
+- **Figma:** página «Landing v2 · Redes + App C» (`127:788`) con Desktop A/B, Mobile A, éxito del registro, notas de interacción y las dos opciones de header. Se eligió la **opción 2** (hipótesis contrastada). La usuaria ajustó después el rótulo común a texto blanco sin bloque y la tarjeta del hero a coral; el código sigue esa versión. Mobile B no está dibujado: es Mobile A con el copy y las pantallas de B.
+- **Código:** `ProductPreview.tsx` y `landing.css` eliminados; nuevo `Art.tsx`, `src/art/`, `public/app/`. Formulario, validación, consentimientos, estados, API, atribución, medición, Redis y configuración Vercel sin cambios funcionales. Se añade el peso 800 de Outfit.
+- **Movimiento** (todo anulado con `prefers-reduced-motion: reduce`): botones que se hunden 3 px al presionar, entrada escalonada de los bloques de palabra, entrada del teléfono, la tarjeta y los personajes en el hero, parpadeo ocasional de ojos, inclinación de la tarjeta con el puntero (solo puntero fino), aparición de pantallas al entrar en viewport, pasos numerados que aparecen en secuencia, icono +/− de FAQ, confeti breve al registrarse. Sin JS o con movimiento reducido todo queda visible.
+- **Pruebas:** 34 unitarias/API, build TypeScript/Vite y 22/22 E2E (Chromium escritorio e iPhone 13 emulado) con axe sin violaciones. Los E2E se actualizaron al H1 aprobado y a la nueva ilustración de producto (comprobación de que el teléfono y los bloques del H1 caben en 320–1440 px y de que las pantallas tienen texto alternativo); la prueba de assets recorre la página porque las pantallas cargan en diferido.
+- **Pendiente:** QA publicado con `test=1` tras el despliegue, comparar en Safari/iPhone real, decidir si Mobile B se dibuja en Figma, y sincronizar Figma si se cambian pantallas o copy desde código.
