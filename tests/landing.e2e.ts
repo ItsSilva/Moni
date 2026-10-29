@@ -71,7 +71,7 @@ test('pending save, rate limit and retry never claim success before persistence'
  const gate=new Promise<void>(resolve=>{release=resolve;});
  await page.route('**/api/lead',async route=>{attempts++;if(attempts===1){await gate;await route.fulfill({status:429,json:{error:'rate'}});}else await route.fulfill({json:{ok:true}});});
  await page.goto('/?variant=a&test=1');
- await page.getByLabel('Correo electrónico').fill('retry@example.com');await page.getByLabel('Ciudad',{exact:true}).selectOption('other');await page.getByLabel('¿Considerarías').selectOption('maybe');await page.locator('#adult').check();await page.locator('#consent').check();
+ await page.getByLabel('Correo electrónico').fill('retry@example.com');await page.getByLabel('Ciudad',{exact:true}).selectOption('11001');await page.getByLabel('¿Considerarías').selectOption('maybe');await page.locator('#adult').check();await page.locator('#consent').check();
  await page.getByRole('button',{name:cta,exact:true}).click();
  await expect(page.getByRole('button',{name:'Guardando tu interés…'})).toBeDisabled();
  await expect(page.locator('form')).toHaveAttribute('aria-busy','true');
@@ -111,4 +111,23 @@ test('keyboard reaches confirmation, both dialogs and restores focus',async({pag
   const trigger=page.getByRole('button',{name:label,exact:true});await trigger.focus();await page.keyboard.press('Enter');await expect(page.getByRole('dialog')).toBeVisible();
   await expect(page.getByRole('button',{name:'Cerrar',exact:true})).toBeFocused();await page.keyboard.press('Escape');await expect(trigger).toBeFocused();
  }
+});
+
+
+test('national catalogue submits an unambiguous city code with unchanged consent and attribution', async ({ page }) => {
+ let payload: Record<string, unknown> = {};
+ await page.route('**/api/lead', r => { payload = r.request().postDataJSON(); return r.fulfill({json:{ok:true}}); });
+ await page.goto('/?variant=b&test=1');
+ await expect(page.locator('#city option')).toHaveCount(1123);
+ await expect(page.locator('#city optgroup')).toHaveCount(33);
+ await expect(page.locator('#city option[value="other"]')).toHaveCount(0);
+ await expect(page.locator('#city option[value="27493"]')).toContainText('Nuevo Belén de Bajirá');
+ await page.getByLabel('Ciudad', {exact:true}).selectOption('05001');
+ await expect(page.locator('#city option:checked')).toHaveText('Medellín · Antioquia');
+ await page.getByLabel('Correo electrónico').fill('national-qa@example.com');
+ await page.getByLabel('¿Considerarías').selectOption('yes');
+ await page.locator('#adult').check(); await page.locator('#consent').check();
+ await page.getByRole('button',{name:cta,exact:true}).click();
+ await expect(page.locator('.success')).toBeFocused();
+ expect(payload).toMatchObject({city:'05001',adult:true,consent:true,attribution:{variant:'b',isTest:true}});
 });

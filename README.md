@@ -1,6 +1,6 @@
 # Moni · Su autonomía, tu compañía
 
-> **Continuidad para cualquier modelo o agente de IA — actualizado el 28 de octubre de 2026 (medición opcional, sección 18).**
+> **Continuidad para cualquier modelo o agente de IA — actualizado el 29 de octubre de 2026 (modal de cookies y catálogo nacional de ciudades).**
 > **Landing v2:** por decisión explícita de la usuaria, la web adopta el lenguaje de las piezas de redes (bloques de palabra, personajes con ojos, tarjeta coral con ojos) y las pantallas de la app C «Equilibrio». El H1 aprobado es «Su primera tarjeta débito.» + «Tú acuerdas sus límites.» (A) / «Aprende a ahorrar contigo.» (B). Diseño en Figma, página «Landing v2 · Redes + App C» (`127:788`). Las secciones 5.3 y 10.1 reemplazan la protección y el copy anteriores.
 > **Estado anterior (26/10):** ambas landings están rediseñadas y publicadas. A es la predeterminada; B requiere `?variant=b`. Cabecera y footer usan el SVG vectorial nuevo; el footer no contiene contacto. No mostrar «proyecto académico» en la web ni restaurar esa etiqueta desde versiones anteriores de Figma o documentación.
 > **Medición opcional (28/10):** GA4 y Meta configurados para visitas con consentimiento separado, sin cambios al formulario. IDs reales, límites de verificación y pendientes en la sección 18 y en [la guía de medición](docs/measurement-setup.md). Las auditorías anteriores son evidencia fechada, no prueba de recepción de eventos actuales.
@@ -559,7 +559,7 @@ El nombre de marca es el valor actualmente configurado. La identificación forma
 | Campo | Valores | Regla |
 | --- | --- | --- |
 | `email` | Correo del adulto | Obligatorio; máximo 254 caracteres; normalizado a minúsculas y sin espacios extremos |
-| `city` | `cali`, `other` | Obligatorio |
+| `city` | `cali` o código DIVIPOLA de cinco dígitos del catálogo nacional | Obligatorio; `other` solo por compatibilidad con clientes anteriores |
 | `willingness` | `yes`, `maybe`, `no` | Obligatorio; una respuesta negativa no invalida el registro |
 | `adult` | `true` | Confirma mayoría de edad y rol de cuidador; es declaración, no verificación documental |
 | `consent` | `true` | Autoriza registro/investigación y contacto del piloto |
@@ -567,6 +567,8 @@ El nombre de marca es el valor actualmente configurado. La identificación forma
 | `attribution` | Objeto descrito abajo | Obligatorio para coherencia de medición |
 
 No solicitar nombre, edad del menor, colegio, teléfono, documento, información bancaria o tarjeta. La versión actual tampoco pregunta edad del adulto: solo su confirmación. Los campos extra no forman parte del registro normalizado.
+
+El selector ofrece las 1.122 entradas del catálogo DANE (municipios, San Andrés y áreas no municipalizadas), agrupadas por departamento. El servidor valida contra la misma copia local y añade `cityName`/`cityDepartment`; conserva `cali` para Cali y admite el valor heredado `other`. No se reescriben registros anteriores. Fuente, licencia y actualización en [docs/colombia-places.md](docs/colombia-places.md). La elegibilidad del análisis sigue siendo Cali hasta una decisión metodológica explícita.
 
 `willingness` mide disposición a considerar un medio de pago supervisado; **no mide cuánto pagarían ni intención de aceptar una tarifa**. Evitar esa interpretación en reportes y copy.
 
@@ -748,19 +750,19 @@ No ejecutar ese procedimiento solo para demostrar que funciona con contactos rea
 
 ## 18. GA4 y Meta: medición opcional
 
-Actualizado el 29/10/2026: GA4 usa `G-LZQ06TMWJ0`, suministrado por la compañera responsable de analíticas; sustituye a `G-PTJVQQ1KM2`. La cuenta, propiedad y ajustes del nuevo flujo quedan por confirmar con ella; no atribuirle la propiedad anterior `561084377`. Meta conserva `1002049382950703` (portfolio «Moni Bank» `2541299039710328`). La guía completa para el equipo y futuras IA está en [docs/measurement-setup.md](docs/measurement-setup.md).
+Actualizado el 29/10/2026: GA4 usa `G-LZQ06TMWJ0`, suministrado por la compañera responsable de analíticas; sustituye a `G-PTJVQQ1KM2`. La captura aportada por el usuario el 29/10 identifica cuenta `413978908`, propiedad `561416665` y flujo `16231236814`, con medición mejorada desactivada en esa captura; no atribuirle la propiedad anterior `561084377`. No se ha confirmado recepción en su panel. Meta conserva `1002049382950703` (portfolio «Moni Bank» `2541299039710328`). La guía completa para el equipo y futuras IA está en [docs/measurement-setup.md](docs/measurement-setup.md).
 
 ### 18.1 Alcance vigente
 
-El código emite un `page_view` de GA4 y un `PageView` de Meta por carga autorizada, sin conversiones de registro ni campos del formulario. Redis sigue siendo la fuente del estudio: métricas de visitas, eventos y registros guardados/deduplicados. Las coincidencias avanzadas y los eventos sin código de Meta están desactivados. La medición mejorada estaba desactivada en el flujo anterior de GA4; falta verificar que también esté desactivada en el nuevo, especialmente los eventos automáticos de formularios y páginas que podrían añadir mediciones o duplicarlas.
+El código emite un `page_view` de GA4 y un `PageView` de Meta por carga autorizada, sin conversiones de registro ni campos del formulario. Redis sigue siendo la fuente del estudio: métricas de visitas, eventos y registros guardados/deduplicados. Las coincidencias avanzadas y los eventos sin código de Meta están desactivados. La captura del nuevo flujo muestra medición mejorada desactivada. Mantenerla así, especialmente formularios y páginas automáticas que podrían añadir eventos o duplicarlos. La prueba local del SDK real del nuevo ID emitió una sola visita y ningún evento de formulario.
 
 La guía local de Gemini contenía IDs de ejemplo, scripts inline sin consentimiento, una ruta `main.jsx` inexistente y una sustitución de `vercel.json` que perdía comprobaciones existentes. Se adaptó su intención mediante módulos aislados; no se copió literalmente.
 
 ### 18.2 Consentimiento y privacidad
 
-Aceptar, rechazar o elegir cada proveedor en el bloque al final de la página; cambiar la decisión en «Preferencias de medición». Antes de aceptar no se cargan proveedores. La elección dura 180 días y es independiente del checkbox de investigación/contacto. Retirarla no recarga el formulario. El aviso complementario se versiona como `moni-measurement-v1`; no cambia el consentimiento de registro `moni-interest-v2`, las claves Redis ni su retención.
+Desde el 29/10, un modal nativo aparece al entrar si no existe una decisión vigente. Permite aceptar, rechazar o elegir cada proveedor con igual acceso. Escape o cerrar en la primera visita guarda rechazo; cerrar preferencias existentes conserva la decisión anterior. El fondo permanece inerte hasta cerrar el modal. «Preferencias de medición» al final de la página permite reabrirlo. Antes de aceptar no se cargan proveedores. La elección dura 180 días y es independiente del checkbox de investigación/contacto. Retirarla no recarga el formulario. El aviso complementario se versiona como `moni-measurement-v1`; no cambia el consentimiento de registro `moni-interest-v2`, las claves Redis ni su retención.
 
-Quien no llega al aviso o no acepta queda fuera de los terceros. Esta muestra no representa el total de visitas: no usarla como denominador de la tasa de registro del estudio.
+Quien rechaza o bloquea las etiquetas queda fuera de los terceros. Las negativas previas siguen vigentes; no se borran para volver a pedir aceptación. Esta muestra no representa el total de visitas: no usarla como denominador de la tasa de registro del estudio.
 
 ### 18.3 Configuración y código
 
@@ -772,7 +774,7 @@ Quien no llega al aviso o no acepta queda fuera de los terceros. Esta muestra no
 
 Cualquier parámetro `test` excluye terceros incluso con consentimiento guardado. Preview, hosts ajenos, rutas o parámetros desconocidos también quedan excluidos. UTM sin datos personales y con letras ASCII, números, guion, guion bajo, punto o `~`; usar siempre `variant=a` o `variant=b` explícito en campañas.
 
-Verificados: 37 unitarias/API, 32 E2E escritorio/móvil, build, formulario con proveedores bloqueados, rechazo/cambio de preferencia y ausencia de eventos tardíos tras revocación. SDK reales comprobados en localhost con CSP real y eventos interceptados: un evento de visita por proveedor, sin campos del formulario ni errores CSP. **La recepción en paneles aún no está confirmada**; no confundir emisión interceptada con recepción.
+Verificados el 29/10: 48 unitarias/API, 36 E2E escritorio/móvil, build, formulario con proveedores bloqueados, rechazo/cambio de preferencia y ausencia de eventos tardíos tras revocación. SDK reales comprobados en localhost con CSP real y eventos interceptados: un evento de visita por proveedor, sin campos del formulario ni errores CSP. **La recepción en paneles aún no está confirmada**; el aviso «recogida no activada» no se declara resuelto solo con una emisión interceptada. Se conserva una única instalación manual mediante `gtag.js` en `src/external-measurement.ts`: el snippet pegado con `G-PTJVQQ1KM2` pertenece al flujo anterior y no debe añadirse al HTML. La variable vigente es `G-LZQ06TMWJ0`; no confundir emisión interceptada con recepción.
 
 ### 18.5 Pendientes de conversión y campaña
 

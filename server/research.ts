@@ -1,4 +1,5 @@
 import { createHmac } from 'node:crypto';
+import { parseCity } from '../src/cities.js';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 export const RETENTION_SECONDS = 180 * 86400;
 export const NOTICE_VERSION = 'moni-interest-v2';
@@ -21,8 +22,8 @@ export function parseLead(value: unknown) {
  const d = object(value);
  if (typeof d.email !== 'string') throw new Error('invalid');
  const email = d.email.trim().toLowerCase();
- if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || d.adult !== true || d.consent !== true || !['cali','other'].includes(String(d.city)) || !['yes','maybe','no'].includes(String(d.willingness))) throw new Error('invalid');
- return { email, city:d.city as string, willingness:d.willingness as string, adult:true, consent:true, eligible:d.city === 'cali', attribution:parseAttribution(d.attribution) };
+ if (email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || d.adult !== true || d.consent !== true || !['yes','maybe','no'].includes(String(d.willingness))) throw new Error('invalid');
+ return { email, ...parseCity(d.city), willingness:d.willingness as string, adult:true, consent:true, attribution:parseAttribution(d.attribution) };
 }
 export function digest(value: string) { return createHmac('sha256', process.env.LEAD_HASH_SECRET!).update(value).digest('hex'); }
 export function redisConfig() {

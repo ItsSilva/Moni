@@ -30,7 +30,7 @@ test('no vendors before consent, on rejection or in QA even with saved consent',
   expect(requests).toEqual([]);
   await page.getByRole('button', { name: 'Rechazar opcionales', exact: true }).click();
   await page.reload(); expect(requests).toEqual([]);
-  await expect(page.getByRole('button', { name: 'Aceptar opcionales' })).toHaveCount(0);
+  await expect(page.getByRole('dialog')).not.toBeVisible();
   await page.evaluate(value => localStorage.setItem('moni-measurement-v1', JSON.stringify(value)), accepted);
   await page.goto('/?variant=b&test=1'); expect(requests).toEqual([]);
   await expect(page.getByRole('button', { name: 'Preferencias de medición', exact: true })).toHaveCount(0);
@@ -39,10 +39,10 @@ test('independent categories, one page view, no form fields or fake conversions,
   const requests = await mockVendors(page);
   await page.route('**/api/lead', r => r.fulfill({ json: { ok: true } }));
   await page.goto('/?variant=b&utm_source=instagram');
-  await fillRegistration(page);
   await page.getByRole('button', { name: 'Elegir medición' }).click();
   await page.getByLabel('Analítica de visitas').check();
   await page.getByRole('button', { name: 'Guardar preferencias' }).click();
+  await fillRegistration(page);
   await expect.poll(() => commands(page, '__google')).toEqual(expect.arrayContaining([expect.arrayContaining(['event', 'page_view'])]));
   expect(requests.filter(u => u.includes('facebook'))).toHaveLength(0);
   await page.getByRole('button', { name: 'Preferencias de medición', exact: true }).click();
@@ -79,14 +79,39 @@ test('consent UI reflows at 320px, is keyboard accessible and restores focus', a
   await mockVendors(page); await page.setViewportSize({ width: 320, height: 800 }); await page.goto('/');
   await expect(page.getByRole('button', { name: 'Aceptar opcionales' })).toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-  await page.locator('.measurement').scrollIntoViewIfNeeded();
+  await expect(page.getByRole('dialog')).toBeVisible();
+  await expect(page.locator('#measurement-title')).toBeFocused();
+  await expect(page.getByRole('button', { name: 'Aceptar opcionales' })).toBeInViewport();
+  const acceptBox = await page.getByRole('button', { name: 'Aceptar opcionales' }).boundingBox();
+  expect(acceptBox!.height).toBeLessThan(80);
   await page.screenshot({ path: info.outputPath('consent-320.png') });
   const trigger = page.getByRole('button', { name: 'Elegir medición' });
   await trigger.focus(); await page.keyboard.press('Enter');
-  await expect(page.getByRole('button', { name: 'Cerrar preferencias' })).toBeFocused();
+  await expect(page.locator('#measurement-title')).toBeFocused();
   expect((await new AxeBuilder({ page }).include('.measurement').withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze()).violations).toEqual([]);
   await page.screenshot({ path: info.outputPath('preferences-320.png') });
-  await page.keyboard.press('Escape'); await expect(trigger).toBeFocused();
+  await page.keyboard.press('Escape');
+  await expect(page.getByRole('dialog')).not.toBeVisible();
+  await expect(page.locator('header a').first()).toBeFocused();
+  const preferences = page.getByRole('button', { name: 'Preferencias de medición', exact: true });
+  await preferences.click(); await page.keyboard.press('Escape'); await expect(preferences).toBeFocused();
+});
+
+test('initial modal traps focus, accepts explicitly once, and remembers the choice on return', async ({ page }) => {
+  const requests = await mockVendors(page);
+  await page.goto('/');
+  await expect(page.getByRole('dialog')).toBeVisible();
+  for (let i = 0; i < 10; i++) {
+    await page.keyboard.press('Tab');
+    expect(await page.evaluate(() => !!document.activeElement?.closest('dialog'))).toBe(true);
+  }
+  expect(requests).toEqual([]);
+  await page.getByRole('button', { name: 'Aceptar opcionales' }).click();
+  await expect.poll(() => commands(page, '__google')).toEqual(expect.arrayContaining([expect.arrayContaining(['event', 'page_view'])]));
+  await expect(page.getByRole('dialog')).not.toBeVisible();
+  await page.reload();
+  await expect(page.getByRole('dialog')).not.toBeVisible();
+  await expect.poll(async () => (await commands(page, '__google')).filter(c => c[0] === 'event').length).toBe(1);
 });
 test('revoking consent while scripts are loading prevents late page views', async ({ page }) => {
   let release!: () => void;

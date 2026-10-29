@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState, type FormEvent } from 'react';
 import { createRoot } from 'react-dom/client';
+import { cityGroups } from './cities';
 import '@fontsource/outfit/latin-400.css';
 import '@fontsource/outfit/latin-500.css';
 import '@fontsource/outfit/latin-600.css';
@@ -37,7 +38,7 @@ function Registration({openPrivacy}:{openPrivacy:()=>void}){
   {!configured&&<p className="notice" role="status">Estamos preparando la apertura del registro. Vuelve pronto para dejar tu interés.</p>}
   {Object.keys(errors).length>0&&<div className="error-summary" tabIndex={-1} ref={summary}><h4>Revisa estos campos para continuar:</h4><ul>{Object.entries(errors).map(([k,v])=><li key={k}><a href={`#${k}`}>{v}</a></li>)}</ul></div>}
   <div className="field"><label htmlFor="email">Correo electrónico</label><input id="email" name="email" type="email" autoComplete="email" inputMode="email" spellCheck={false} maxLength={254} required placeholder="tu@correo.com" {...validation('email')}/>{error('email')}</div>
-  <div className="field"><label htmlFor="city">Ciudad</label><select id="city" name="city" required defaultValue="" {...validation('city')}><option value="" disabled>Selecciona tu ciudad</option><option value="cali">Cali</option><option value="other">Otra ciudad</option></select>{error('city')}</div>
+  <div className="field"><label htmlFor="city">Ciudad</label><select id="city" name="city" required defaultValue="" {...validation('city')}><option value="" disabled>Selecciona tu ciudad o municipio</option>{cityGroups.map(group => <optgroup key={group.department} label={group.department}>{group.places.map(place => <option key={place.code} value={place.code === '76001' ? 'cali' : place.code}>{place.name} · {place.department}</option>)}</optgroup>)}</select>{error('city')}</div>
   <div className="field"><label htmlFor="willingness">¿Considerarías un medio de pago supervisado?</label><select id="willingness" name="willingness" required defaultValue="" {...validation('willingness')}><option value="" disabled>Selecciona una respuesta</option><option value="yes">Sí</option><option value="maybe">Tal vez, necesito más información</option><option value="no">No por ahora</option></select>{error('willingness')}</div>
   <div className="trap" aria-hidden="true"><label htmlFor="website">Deja este campo vacío</label><input id="website" name="website" autoComplete="off" tabIndex={-1}/></div>
   <div className="check-field"><label><input id="adult" name="adult" type="checkbox" required {...validation('adult')}/><span>Soy mayor de 18 años y soy padre, madre o cuidador.</span></label>{error('adult')}</div>

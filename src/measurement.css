@@ -1,14 +1,14 @@
 .measurement{color:var(--ink);background:var(--soft);padding:24px max(24px,calc((100% - 1280px)/2));border-top:1px solid var(--line)}
-.measurement-banner{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:center}
-.measurement-banner h2{font-size:22px;line-height:1.25;margin-bottom:8px}
-.measurement-banner p{max-width:70ch;font-size:16px}
 .measurement-actions{display:flex;flex-wrap:wrap;gap:12px}
 .measurement-actions button{min-height:44px;padding:12px 16px;border:1px solid var(--ink);border-radius:12px;background:#fff;color:var(--ink);font-weight:500;font-size:16px}
 .measurement-actions button:hover{background:var(--tint-blue)}
 .measurement-status{display:block;font-size:14px}
-.measurement-dialog{max-width:620px}
+.measurement-dialog{max-width:680px;margin:auto;border-top:8px solid var(--blue);overflow-y:auto}
+.measurement-dialog .modal-header{justify-content:space-between}
+.measurement-dialog .modal-header h2{font-size:clamp(24px,4vw,32px);max-width:16ch}
+.measurement-dialog .measurement-actions button{flex:1 1 150px}
+.measurement-dialog .small{font-size:14px;color:var(--muted)}
 .measurement-option{display:flex;align-items:flex-start;gap:14px;margin:24px 0;line-height:1.5}
 .measurement-option input{flex:none;width:24px;height:24px;margin:2px 0;accent-color:var(--blue-deep)}
 .measurement-dialog .measurement-actions{margin-top:24px}
-@media(max-width:1000px){.measurement-banner{grid-template-columns:1fr}}
-@media(max-width:480px){.measurement-actions{flex-direction:column}.measurement-actions button{width:100%}}
+@media(max-width:480px){.measurement-actions{flex-direction:column}.measurement-actions button{width:100%}.measurement-dialog .measurement-actions button{flex:0 0 auto}}

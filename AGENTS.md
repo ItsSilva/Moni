@@ -21,6 +21,7 @@ Lee README.md completo antes de cambiar la web. Es el documento de continuidad d
 - Se permite mejorar composición externa, espaciado y escala uniforme responsive; no cambiar estructura, rótulos, cifras, colores, iconos o controles internos del producto.
 - Los hashes de `docs/product-baseline.json` ayudan a detectar cambios, pero no reemplazan QA visual.
 - Mantener hipótesis A (control/acompañamiento) y B (aprendizaje/ahorro). Primero A, después B; sin asignación aleatoria ni cambio automático. Default A; `?variant=b` muestra B.
+- Formulario: desde el 29/10, catálogo DANE completo en `src/data/colombia-places.json`, validación compartida en `src/cities.ts`; `cali` conserva su valor y elegibilidad, `other` solo por compatibilidad. No ampliar la cohorte elegible por inferencia.
 - Formularios, CTA y condiciones comparables en ambas variantes. No reintroducir edades, nombres de menores o datos bancarios.
 
 ## Skills
@@ -57,6 +58,6 @@ Leer las instrucciones relevantes completas. La identidad, el producto protegido
 
 ## Meta y datos
 
-GA4 y Meta están configurados para visitas opcionales con consentimiento separado; ver README 18 y docs/measurement-setup.md. Conversiones de registro y recepción en paneles siguen pendientes. No confundir UTM/medición en Redis con conversiones enviadas a Meta. Mantener CSP limitada, exclusión de QA y, si se autoriza después medir registros, evento solo después de persistencia. La respuesta pública actual no distingue nuevos/duplicados; no exponer esa diferencia para implementar Pixel. No activar advanced matching, CAPI, presupuestos o campañas por inferencia.
+GA4 (`G-LZQ06TMWJ0`, no el ID anterior `G-PTJVQQ1KM2`) y Meta están configurados para visitas opcionales con consentimiento separado en modal inicial; aceptar, rechazar, cerrar o configurar permiten continuar. Respetar decisiones previas y no duplicar snippets; ver README 18 y docs/measurement-setup.md. Conversiones de registro y recepción en paneles siguen pendientes. No confundir UTM/medición en Redis con conversiones enviadas a Meta. Mantener CSP limitada, exclusión de QA y, si se autoriza después medir registros, evento solo después de persistencia. La respuesta pública actual no distingue nuevos/duplicados; no exponer esa diferencia para implementar Pixel. No activar advanced matching, CAPI, presupuestos o campañas por inferencia.
 
 El correo del proyecto es público; credenciales y exportaciones son privadas. No subir `.env`, `.vercel`, exports, originales de Social o tokens. Los permisos de servicios deben comprobarse en cada entorno: el README y las skills no transfieren sesiones autenticadas.
