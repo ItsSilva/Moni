@@ -1,9 +1,9 @@
 # Moni · Su autonomía, tu compañía
 
-> **Continuidad para cualquier modelo o agente de IA — actualizado el 27 de octubre de 2026 (landing v2, sección 27).**
+> **Continuidad para cualquier modelo o agente de IA — actualizado el 28 de octubre de 2026 (medición opcional, sección 18).**
 > **Landing v2:** por decisión explícita de la usuaria, la web adopta el lenguaje de las piezas de redes (bloques de palabra, personajes con ojos, tarjeta coral con ojos) y las pantallas de la app C «Equilibrio». El H1 aprobado es «Su primera tarjeta débito.» + «Tú acuerdas sus límites.» (A) / «Aprende a ahorrar contigo.» (B). Diseño en Figma, página «Landing v2 · Redes + App C» (`127:788`). Las secciones 5.3 y 10.1 reemplazan la protección y el copy anteriores.
 > **Estado anterior (26/10):** ambas landings están rediseñadas y publicadas. A es la predeterminada; B requiere `?variant=b`. Cabecera y footer usan el SVG vectorial nuevo; el footer no contiene contacto. No mostrar «proyecto académico» en la web ni restaurar esa etiqueta desde versiones anteriores de Figma o documentación.
-> **Esta entrega solo actualiza README.md.** La auditoría contrasta el código y los servicios del commit `009e5d0469fb24a5f539b192b43c181503fb6e6d`; no encarga otro rediseño ni cambios en Figma. Estado comprobado y límites en la sección 4; pendientes reales en la 22.
+> **Medición opcional (28/10):** GA4 y Meta configurados para visitas con consentimiento separado, sin cambios al formulario. IDs reales, límites de verificación y pendientes en la sección 18 y en [la guía de medición](docs/measurement-setup.md). Las auditorías anteriores son evidencia fechada, no prueba de recepción de eventos actuales.
 
 Este documento permite continuar sin el chat original. Describe producto, decisiones, archivos, servicios, pruebas y pendientes. No contiene secretos ni transfiere credenciales. Las instrucciones vigentes del usuario determinan el alcance: los ejemplos de tareas futuras no autorizan su ejecución.
 
@@ -28,7 +28,7 @@ La landing valida interés en una propuesta de tarjeta y app; no representa un b
 15. [Redis, retención y deduplicación](#15-redis-retención-y-deduplicación)
 16. [Medición y análisis del estudio](#16-medición-y-análisis-del-estudio)
 17. [Exportación y solicitudes sobre datos](#17-exportación-y-solicitudes-sobre-datos)
-18. [Meta Pixel: implementación pendiente](#18-meta-pixel-implementación-pendiente)
+18. [GA4 y Meta: medición opcional](#18-ga4-y-meta-medición-opcional)
 19. [Accesibilidad, rendimiento y seguridad](#19-accesibilidad-rendimiento-y-seguridad)
 20. [Pruebas y criterios de aceptación](#20-pruebas-y-criterios-de-aceptación)
 21. [Publicación, pausa y recuperación](#21-publicación-pausa-y-recuperación)
@@ -82,7 +82,7 @@ El usuario ya creó videos para publicidad y publicaciones de Instagram. La web 
 | Encabezado A/B (v2) | Rótulo común «Su primera tarjeta débito.» en texto blanco; el H1 grande es la hipótesis: «Tú acuerdas sus límites.» (A) / «Aprende a ahorrar contigo.» (B), misma estructura y colores |
 | Backend | Funciones de Vercel y Upstash Redis REST; ya operativo |
 | Canal publicitario previsto | Meta Ads; las campañas se administran fuera de este repositorio |
-| Meta Pixel | Todavía no implementado ni configurado |
+| GA4 y Meta Pixel | Visitas con consentimiento separado; conversiones de registro pendientes. Ver sección 18 |
 | Correo transaccional | No implementado; el formulario guarda en Redis |
 | Publicación | El usuario autorizó cambios y correcciones en `main` y despliegues del proyecto |
 
@@ -455,6 +455,9 @@ No se utiliza Next.js, Tailwind, shadcn/ui, un CMS, una base SQL o una librería
 | `src/styles.css` | Todo el CSS de la landing v2: tokens, secciones, responsive, movimiento y movimiento reducido (`landing.css` se integró aquí) |
 | `src/attribution.ts` | Variante, UTM, identidad del navegador y exposición cruzada |
 | `src/analytics.ts` | Configuración pública, visita y eventos de primera parte |
+| `src/external-measurement.ts`, `src/measurement-policy.ts` | SDK opcionales y exclusión de QA/hosts/URLs no admitidos |
+| `src/MeasurementConsent.tsx`, `src/measurement.css` | Elección independiente de medición y aviso complementario |
+| `docs/measurement-setup.md` | Activos GA4/Meta, enlaces de campaña, configuración, evidencia y límites |
 | `api/lead.ts` | Validación y escritura del registro |
 | `api/visit.ts` | Persistencia de visitas deduplicadas |
 | `api/event.ts` | Persistencia de eventos permitidos |
@@ -743,78 +746,39 @@ Proporcionar el correo por entrada estándar y terminar con EOF. Así no se colo
 
 No ejecutar ese procedimiento solo para demostrar que funciona con contactos reales. No borra exportaciones privadas, registros de infraestructura ni visitas/eventos independientes. Revisar las copias que mantiene el equipo y el alcance de la solicitud; no prometer eliminación global automática.
 
-## 18. Meta Pixel: implementación pendiente
+## 18. GA4 y Meta: medición opcional
 
-### 18.1 Situación actual
+Configurados el 28/10/2026: GA4 `G-PTJVQQ1KM2` (propiedad «Moni · Landing» `561084377`) y Meta `1002049382950703` (portfolio «Moni Bank» `2541299039710328`). La guía completa para el equipo y futuras IA está en [docs/measurement-setup.md](docs/measurement-setup.md).
 
-**No hay Pixel, ID de Pixel configurado, SDK de Meta, Conversions API, envío de eventos a Meta ni verificación de eventos en Meta documentada.** La medición actual es de primera parte y vive en Redis. Los anuncios pueden dirigir a enlaces UTM, pero esto no equivale a que Meta reciba conversiones de registro.
+### 18.1 Alcance vigente
 
-Meta Pixel no es requisito técnico para recoger interés y analizar registros con la medición propia actual. Sí hace falta una integración apropiada si se quiere enviar conversiones de la web a Meta. No bloquear mejoras de la landing por esta ausencia. El usuario quiere usar Meta Ads; la integración se debe trabajar como una tarea explícita con pruebas y configuración propia, manteniendo intacto el registro si un bloqueador impide cargar el píxel.
+Un `page_view` de GA4 y un `PageView` de Meta por carga autorizada. No se envían conversiones de registro ni campos del formulario. Redis sigue siendo la fuente del estudio: métricas de visitas, eventos y registros guardados/deduplicados. La medición mejorada de GA4, las coincidencias avanzadas y los eventos sin código de Meta están desactivados.
 
-### 18.2 Insumos necesarios
+La guía local de Gemini contenía IDs de ejemplo, scripts inline sin consentimiento, una ruta `main.jsx` inexistente y una sustitución de `vercel.json` que perdía comprobaciones existentes. Se adaptó su intención mediante módulos aislados; no se copió literalmente.
 
-- Acceso autorizado al negocio/cuenta y al dataset o píxel correcto en Meta Events Manager.
-- Identificador público del píxel; no inventarlo ni utilizar uno de ejemplo en Production.
-- Definición de la conversión que se quiere medir: registro recibido, contacto elegible o contacto nuevo deduplicado. No son equivalentes.
-- Definición del consentimiento publicitario y actualización del aviso con el responsable.
-- Confirmación del dominio utilizado en campaña y de cualquier requisito de Meta que se aplique a esa configuración.
-- Posibilidad de usar Eventos de prueba y de comprobar solicitudes reales desde el navegador.
+### 18.2 Consentimiento y privacidad
 
-No se necesita acceso a los correos de personas para diseñar la integración. No publicar tokens de CAPI ni credenciales de Meta. Si se utiliza en el futuro una variable `VITE_META_PIXEL_ID`, su nombre es una **propuesta**, no configuración existente; el ID es público, un token de acceso no lo es.
+Aceptar, rechazar o elegir cada proveedor en el bloque al final de la página; cambiar la decisión en «Preferencias de medición». Antes de aceptar no se cargan proveedores. La elección dura 180 días y es independiente del checkbox de investigación/contacto. Retirarla no recarga el formulario. El aviso complementario se versiona como `moni-measurement-v1`; no cambia el consentimiento de registro `moni-interest-v2`, las claves Redis ni su retención.
 
-### 18.3 Consentimiento y texto de privacidad
+Quien no llega al aviso o no acepta queda fuera de los terceros. Esta muestra no representa el total de visitas: no usarla como denominador de la tasa de registro del estudio.
 
-El checkbox actual autoriza investigación y contacto del piloto; no debe reinterpretarse automáticamente como aceptación de seguimiento publicitario de terceros.
+### 18.3 Configuración y código
 
-Diseñar una elección diferenciada para analítica publicitaria: aceptación, rechazo y cambio posterior de preferencia. Como criterio de implementación, no cargar el script, iframe o imagen de Meta antes de la aceptación requerida para esa integración. Rechazar seguimiento no debe bloquear el formulario ni impedir el guardado del registro autorizado.
+Solo Production recibe `VITE_MEASUREMENT_ENABLED=true`, `VITE_MEASUREMENT_HOST=moni-sigma-eight.vercel.app`, `VITE_GA4_MEASUREMENT_ID` y `VITE_META_PIXEL_ID` con los IDs anteriores. Requiere redeploy. Los IDs son públicos; nunca añadir tokens bajo `VITE_`.
 
-El aviso actual dice que no se instalan píxeles o cookies de terceros. Si se integra Meta, esa frase dejaría de ser cierta: actualizarla, describir finalidades y destinatario y versionar el aviso coordinadamente. `NOTICE_VERSION` y el texto visible contienen `moni-interest-v2`; planificar su cambio sin confundir automáticamente la versión del aviso con una migración del espacio de claves v2.
+`src/measurement-policy.ts` valida configuración, URL y consentimiento; `src/external-measurement.ts` carga los SDK; `src/MeasurementConsent.tsx` y `src/measurement.css` contienen exclusivamente los controles y aviso opcionales. No conectar estos módulos con `Registration` ni interceptar `/api/lead`. CSP limitada a orígenes concretos; se conserva `check-storage.mjs`. No añadir otra instalación en HTML/GTM.
 
-Esto es un requisito de producto y privacidad para la implementación, no una certificación legal. Confirmar el texto y las reglas aplicables con el responsable del estudio antes de activar seguimiento real.
+### 18.4 QA y límites
 
-### 18.4 Eventos propuestos y condiciones
+Cualquier parámetro `test` excluye terceros incluso con consentimiento guardado. Preview, hosts ajenos, rutas o parámetros desconocidos también quedan excluidos. UTM sin datos personales y con letras ASCII, números, guion, guion bajo, punto o `~`; usar siempre `variant=a` o `variant=b` explícito en campañas.
 
-| Evento de Meta propuesto | Disparo | Restricción |
-| --- | --- | --- |
-| `PageView` | Tras inicialización autorizada | Una vez por carga lógica; evitar duplicación por StrictMode |
-| `Lead` | Solo después de `/api/lead` con HTTP correcto y `ok: true`, si se adopta la definición de registro recibido | Nunca al pulsar el botón, con formulario inválido, error o registro pausado |
-| Eventos adicionales | Solo si responden a una pregunta del estudio | No replicar indiscriminadamente todos los eventos internos |
+Verificados: 37 unitarias/API, 32 E2E escritorio/móvil, build, formulario con proveedores bloqueados, rechazo/cambio de preferencia y ausencia de eventos tardíos tras revocación. SDK reales comprobados en localhost con CSP real y eventos interceptados: un evento de visita por proveedor, sin campos del formulario ni errores CSP. **La recepción en paneles aún no está confirmada**; no confundir emisión interceptada con recepción.
 
-Seleccionar un evento primario con una definición documentada; no enviar `Lead` y `CompleteRegistration` para el mismo objetivo solo para inflar métricas. No afirmar que `Lead` representa un contacto único nuevo: la API actual devuelve el mismo éxito para nuevos y repetidos.
+### 18.5 Pendientes de conversión y campaña
 
-Si se requiere atribuir **altas nuevas deduplicadas**, diseñar una señal segura desde servidor; no exponer públicamente si un correo ya estaba registrado. La deduplicación navegador/servidor mediante `event_id` tampoco sustituye por sí sola la deduplicación de personas o correos. CAPI es una posible fase posterior, no un requisito ya implementado ni una razón para reescribir la API ahora.
+No hay `Lead`, `CompleteRegistration`, `generate_lead` ni CAPI. Antes de añadirlos, definir si se mide registro recibido o alta nueva deduplicada. Una respuesta pública `ok: true` también puede ser un duplicado; no exponer esa diferencia para implementar publicidad ni disparar conversión al hacer clic. Cualquier evento de registro requerirá persistencia correcta y consentimiento, con pruebas propias.
 
-### 18.5 Datos, pruebas y separación
-
-- No enviar correo, nombres, ciudad, respuestas del formulario, identificadores de menores o texto libre a parámetros de Pixel.
-- No activar advanced matching automático por defecto. Si se evalúa, hacerlo como decisión separada y justificada.
-- Revisar también datos automáticos, URL, referrer, parámetros y configuración de Meta; limitar únicamente el payload manual no garantiza ausencia de información personal.
-- Mantener UTM sin datos personales y con nombres controlados.
-- `test=1` debe excluirse del píxel de producción. Para probar eventos de Meta, usar un modo de diagnóstico deliberado y el mecanismo de prueba vigente, separado del tráfico real y de la definición actual de `test=1`.
-- No convertir visitantes de las pruebas del equipo en conversiones de campaña.
-- Verificar que rechazar consentimiento, cargar sin ID, fallar la red o bloquear Meta no rompe el formulario.
-
-### 18.6 CSP e implementación técnica
-
-`vercel.json` restringe `script-src` y `connect-src` a `'self'`, e imágenes a `'self' data:`. La integración de Meta requiere revisar las directivas y permitir solo los orígenes estrictamente necesarios según su documentación oficial vigente y las solicitudes observadas. No abrir con `*`, quitar toda la política o añadir `unsafe-eval` como solución rápida.
-
-Preferir un módulo aislado que inicialice una sola vez, compruebe consentimiento/configuración/entorno y no afecte el guardado. Si la integración requiere bootstrap inline, evaluar nonce/hash o un módulo propio conforme a la CSP; no copiar un snippet sin revisar su efecto.
-
-La documentación oficial de Meta está enlazada al final. Su acceso produjo errores temporales al abrir algunas páginas durante el traspaso original; las instrucciones concretas de instalación, consentimiento, dominios y validación deben verificarse nuevamente al implementar.
-
-### 18.7 Criterios para considerar Pixel terminado
-
-- ID real correcto y configuración separada por entorno.
-- Ninguna solicitud a Meta antes del consentimiento previsto ni tras su rechazo.
-- Formulario operativo con Meta bloqueado.
-- Evento primario solo tras respuesta de persistencia, con definición explícita sobre duplicados.
-- Sin datos personales en payloads, parámetros o URLs observados.
-- Sin doble inicialización o doble conversión por StrictMode/reintentos.
-- Pruebas del equipo excluidas de métricas reales.
-- Aviso actualizado y mecanismo para cambiar la preferencia.
-- CSP verificada sin aperturas generales.
-- Eventos confirmados en la herramienta de prueba de Meta, con evidencia de qué se probó.
-- README actualizado distinguiendo primera parte, Pixel y cualquier futura CAPI.
+Falta confirmar recepción con tráfico real consentido o un diagnóstico separado autorizado y revisar permisos/vinculación de la cuenta publicitaria que utilizará el equipo. No se crearon campañas ni presupuestos. No desactivar las restricciones de categoría financiera de Meta para obtener más datos.
 
 ## 19. Accesibilidad, rendimiento y seguridad
 
@@ -954,7 +918,7 @@ Documentar qué versión y periodo estuvieron activos. Si se revierte una integr
 | Preview no guarda | Es el estado esperado sin base/flag de pruebas configurados |
 | Se ve A cuando se esperaba B | `variant=b` exacto y URL real del anuncio |
 | Datos de QA aparecen en cohorte real | Faltó `test=1`; registrar exclusión privada, no borrar indiscriminadamente |
-| Meta no recibe registros | Pixel aún pendiente; UTM no equivale a integración de conversiones |
+| Meta no recibe registros | Se miden visitas autorizadas; conversión de registros aún no implementada. Ver sección 18 |
 | App cambia tras rediseño | Tokens/estilos heredados y selectores compartidos, además del componente |
 
 ## 22. Plan de ejecución y pendientes
@@ -985,7 +949,7 @@ Informar qué cambió y por qué, archivos/commit, verificaciones nuevas y sus l
 
 Copiar al abrir el repo con cualquier modelo y reemplazar el marcador por una tarea concreta. No sustituye la lectura de documentación:
 
-> Continúa Moni en ItsSilva/Moni. Mi tarea actual es: [DESCRIBIR CAMBIO Y ENTREGA: CÓDIGO, FIGMA O AMBOS]. Lee completos README.md y AGENTS.md, y consulta docs/skills-lock.json y docs/product-baseline.json. Inspecciona primero el workspace y conserva cambios existentes; el repo debe estar en Moni, junto a Social. Confirma el estado de main y las conexiones disponibles sin asumir credenciales heredadas. Las landings y el footer ya están rediseñados, usan el SVG nuevo y no muestran la etiqueta académica ni contacto en footer. Figma conserva versiones anteriores en partes de la landing: usa el mapa y las decisiones vigentes del README. No ejecutes otra vez el rediseño ni los pendientes por inferencia. Conserva identidad, producto y datos fuera del alcance; si pido cambiar pantallas explícitamente, aplica el flujo 5.5 al destino solicitado y declara qué queda sincronizado. A es predeterminada, B requiere variant=b, primero se estudia A y luego B. Conserva validación, consentimiento, guardado real, deduplicación, retención y medición; todo QA publicado lleva test=1 y datos ficticios. No exportes contactos para revisar diseño ni publiques Social. Usa las skills pertinentes, verifica y entrega evidencia proporcional al cambio. Las correcciones acordadas pueden publicarse en main y el Vercel existente sin force push. Meta Pixel sigue pendiente; no activarlo sin configuración, consentimiento y pruebas. Actualiza documentación solo cuando corresponda e informa accesos imprescindibles faltantes con precisión.
+> Continúa Moni en ItsSilva/Moni. Mi tarea actual es: [DESCRIBIR CAMBIO Y ENTREGA: CÓDIGO, FIGMA O AMBOS]. Lee completos README.md y AGENTS.md, y consulta docs/skills-lock.json y docs/product-baseline.json. Inspecciona primero el workspace y conserva cambios existentes; el repo debe estar en Moni, junto a Social. Confirma el estado de main y las conexiones disponibles sin asumir credenciales heredadas. Las landings y el footer ya están rediseñados, usan el SVG nuevo y no muestran la etiqueta académica ni contacto en footer. Figma conserva versiones anteriores en partes de la landing: usa el mapa y las decisiones vigentes del README. No ejecutes otra vez el rediseño ni los pendientes por inferencia. Conserva identidad, producto y datos fuera del alcance; si pido cambiar pantallas explícitamente, aplica el flujo 5.5 al destino solicitado y declara qué queda sincronizado. A es predeterminada, B requiere variant=b, primero se estudia A y luego B. Conserva validación, consentimiento, guardado real, deduplicación, retención y medición; todo QA publicado lleva test=1 y datos ficticios. No exportes contactos para revisar diseño ni publiques Social. Usa las skills pertinentes, verifica y entrega evidencia proporcional al cambio. Las correcciones acordadas pueden publicarse en main y el Vercel existente sin force push. GA4 y Meta miden visitas opcionales según la sección 18; no añadir conversiones ni modificar el formulario por inferencia. Actualiza documentación solo cuando corresponda e informa accesos imprescindibles faltantes con precisión.
 
 ## 24. Fuentes y trazabilidad
 

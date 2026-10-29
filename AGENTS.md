@@ -57,6 +57,6 @@ Leer las instrucciones relevantes completas. La identidad, el producto protegido
 
 ## Meta y datos
 
-Meta Pixel está pendiente. No confundir UTM/medición en Redis con conversiones enviadas a Meta. Seguir el plan del README: ID real, consentimiento separado, aviso actualizado, CSP limitada, exclusión de QA y evento solo después de persistencia. La respuesta pública actual no distingue nuevos/duplicados; no exponer esa diferencia para implementar Pixel. No activar advanced matching, CAPI, presupuestos o campañas por inferencia.
+GA4 y Meta están configurados para visitas opcionales con consentimiento separado; ver README 18 y docs/measurement-setup.md. Conversiones de registro y recepción en paneles siguen pendientes. No confundir UTM/medición en Redis con conversiones enviadas a Meta. Mantener CSP limitada, exclusión de QA y, si se autoriza después medir registros, evento solo después de persistencia. La respuesta pública actual no distingue nuevos/duplicados; no exponer esa diferencia para implementar Pixel. No activar advanced matching, CAPI, presupuestos o campañas por inferencia.
 
 El correo del proyecto es público; credenciales y exportaciones son privadas. No subir `.env`, `.vercel`, exports, originales de Social o tokens. Los permisos de servicios deben comprobarse en cada entorno: el README y las skills no transfieren sesiones autenticadas.
