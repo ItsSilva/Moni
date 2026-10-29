@@ -748,11 +748,11 @@ No ejecutar ese procedimiento solo para demostrar que funciona con contactos rea
 
 ## 18. GA4 y Meta: medición opcional
 
-Configurados el 28/10/2026: GA4 `G-PTJVQQ1KM2` (propiedad «Moni · Landing» `561084377`) y Meta `1002049382950703` (portfolio «Moni Bank» `2541299039710328`). La guía completa para el equipo y futuras IA está en [docs/measurement-setup.md](docs/measurement-setup.md).
+Actualizado el 29/10/2026: GA4 usa `G-LZQ06TMWJ0`, suministrado por la compañera responsable de analíticas; sustituye a `G-PTJVQQ1KM2`. La cuenta, propiedad y ajustes del nuevo flujo quedan por confirmar con ella; no atribuirle la propiedad anterior `561084377`. Meta conserva `1002049382950703` (portfolio «Moni Bank» `2541299039710328`). La guía completa para el equipo y futuras IA está en [docs/measurement-setup.md](docs/measurement-setup.md).
 
 ### 18.1 Alcance vigente
 
-Un `page_view` de GA4 y un `PageView` de Meta por carga autorizada. No se envían conversiones de registro ni campos del formulario. Redis sigue siendo la fuente del estudio: métricas de visitas, eventos y registros guardados/deduplicados. La medición mejorada de GA4, las coincidencias avanzadas y los eventos sin código de Meta están desactivados.
+El código emite un `page_view` de GA4 y un `PageView` de Meta por carga autorizada, sin conversiones de registro ni campos del formulario. Redis sigue siendo la fuente del estudio: métricas de visitas, eventos y registros guardados/deduplicados. Las coincidencias avanzadas y los eventos sin código de Meta están desactivados. La medición mejorada estaba desactivada en el flujo anterior de GA4; falta verificar que también esté desactivada en el nuevo, especialmente los eventos automáticos de formularios y páginas que podrían añadir mediciones o duplicarlas.
 
 La guía local de Gemini contenía IDs de ejemplo, scripts inline sin consentimiento, una ruta `main.jsx` inexistente y una sustitución de `vercel.json` que perdía comprobaciones existentes. Se adaptó su intención mediante módulos aislados; no se copió literalmente.
 
@@ -764,7 +764,7 @@ Quien no llega al aviso o no acepta queda fuera de los terceros. Esta muestra no
 
 ### 18.3 Configuración y código
 
-Solo Production recibe `VITE_MEASUREMENT_ENABLED=true`, `VITE_MEASUREMENT_HOST=moni-sigma-eight.vercel.app`, `VITE_GA4_MEASUREMENT_ID` y `VITE_META_PIXEL_ID` con los IDs anteriores. Requiere redeploy. Los IDs son públicos; nunca añadir tokens bajo `VITE_`.
+`VITE_GA4_MEASUREMENT_ID=G-LZQ06TMWJ0` está en Production, Preview y Development por solicitud del usuario (29/10). Solo Production recibe `VITE_MEASUREMENT_ENABLED=true`, `VITE_MEASUREMENT_HOST=moni-sigma-eight.vercel.app` y `VITE_META_PIXEL_ID`. El ID por sí solo no activa analíticas en Preview/Development; se conservan consentimiento y exclusión de `test`. Requiere redeploy. Los IDs son públicos; nunca añadir tokens bajo `VITE_`.
 
 `src/measurement-policy.ts` valida configuración, URL y consentimiento; `src/external-measurement.ts` carga los SDK; `src/MeasurementConsent.tsx` y `src/measurement.css` contienen exclusivamente los controles y aviso opcionales. No conectar estos módulos con `Registration` ni interceptar `/api/lead`. CSP limitada a orígenes concretos; se conserva `check-storage.mjs`. No añadir otra instalación en HTML/GTM.
 
