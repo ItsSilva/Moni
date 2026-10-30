@@ -6,7 +6,7 @@ Actualizado: 29/10/2026. Alcance vigente: medición de visitas, modal inicial y 
 
 | Servicio | Configuración |
 | --- | --- |
-| Google Analytics | Cuenta «Moni» `413709066`, propiedad «Moni · Landing» `561084377`; recepción aún no comprobada |
+| Google Analytics | Cuenta «Moni» `413709066`, propiedad «Moni · Landing» `561084377`; recepción confirmada en Tiempo real el 29/10 |
 | Flujo web | «Moni · Web» `16222575128`; sitio `https://moni-sigma-eight.vercel.app` |
 | GA4 ID público vigente | **`G-PTJVQQ1KM2`**, destino único confirmado finalmente por Juan el 29/10 |
 | Región de informes | Colombia / COP |
@@ -68,7 +68,7 @@ Para QA del equipo añadir `&test=1` y usar únicamente datos ficticios `example
 - Build TypeScript/Vite correcto. El selector de ciudad y su validación de servidor se ampliaron con DIVIPOLA. Los demás campos, consentimiento de registro, deduplicación, retención, atribución, contenido de variantes, pantallas, personajes y CSS del producto se conservan. Ver [catálogo](colombia-places.md).
 - Prueba adicional repetida el 29/10 con `G-LZQ06TMWJ0`, bundle en localhost, SDK reales y CSP real: un `page_view` GA4 y un `PageView` Meta observados e interceptados antes de enviarse; sin errores de consola/CSP ni datos del formulario. El perfil HeadlessChrome es filtrado por Meta; la comprobación usa el perfil estándar Desktop Chrome de Playwright.
 - Revisión de interfaz nueva: controles nativos, nombres accesibles, Escape y devolución de foco; sin desbordamiento a 320 px ni infracciones axe en reglas ejecutadas. Sin animaciones nuevas. No se certifica accesibilidad total ni prueba manual de lector de pantalla.
-- **Pendiente: confirmar recepción en los paneles de Google y Meta con tráfico real consentido o un entorno de diagnóstico separado autorizado.** Las pruebas interceptadas confirman la emisión, no la recepción. No quitar `test=1` a un envío QA para hacer aparecer datos en los paneles.
+- **Recepción confirmada posteriormente en ambos paneles**, mediante la única excepción expresamente autorizada que se describe abajo. Las pruebas interceptadas anteriores solo confirmaban emisión. El QA habitual sigue con `test=1`; no repetir visitas live por inferencia.
 - **Pendiente si se necesita optimizar anuncios por registros:** acordar definición de conversión y señal segura de persistencia/deduplicación; implementarla como tarea separada. La API pública seguirá sin revelar si un correo ya existía.
 - La responsable de campañas debe verificar sus permisos sobre estos activos y la cuenta publicitaria correcta. No se amplió acceso de personas, no se vinculó una cuenta por inferencia y no se activaron anuncios.
 
@@ -86,6 +86,19 @@ Para confirmar recepción, la responsable debe consultar Tiempo real del flujo c
 
 ## Corrección del destino único (29/10, decisión posterior)
 
-La nueva captura y la sesión autenticada mostraron el aviso en `G-PTJVQQ1KM2`, mientras Vercel y el JavaScript publicado contenían únicamente `G-LZQ06TMWJ0`. La sesión no tenía acceso a la propiedad de este último. Ante la discrepancia, Juan confirmó expresamente: «Usar G-PTJVQQ1KM2, la propiedad de mi captura». Se actualizó la variable en los tres entornos; se requiere reconstruir producción para incorporarla al bundle. No hay cambios de formulario, SDK, consentimiento o infraestructura de almacenamiento.
+La nueva captura y la sesión autenticada mostraron el aviso en `G-PTJVQQ1KM2`, mientras Vercel y el JavaScript publicado contenían únicamente `G-LZQ06TMWJ0`. La sesión no tenía acceso a la propiedad de este último. Ante la discrepancia, Juan confirmó expresamente: «Usar G-PTJVQQ1KM2, la propiedad de mi captura». Se actualizó la variable en los tres entornos; la reconstrucción de producción incorporó el ID confirmado al bundle. No hay cambios de formulario, SDK, consentimiento o infraestructura de almacenamiento.
 
-Panel del equipo: [Moni · Landing / Moni · Web](https://analytics.google.com/analytics/web/#/a413709066p561084377/admin/streams/table/16222575128). El panel de Meta del dataset `1002049382950703` mostraba cero actividad hasta el 28/10 y también al seleccionar «Hoy: 29 oct 2026»; Diagnóstico mostraba «No hay errores en este momento». Ni ese diagnóstico vacío ni la inclusión del SDK prueban recepción. La recepción efectiva sigue pendiente de tráfico consentido o de una prueba diagnóstica expresamente autorizada, separada de los resultados del estudio.
+Panel del equipo: [Moni · Landing / Moni · Web](https://analytics.google.com/analytics/web/#/a413709066p561084377/admin/streams/table/16222575128). El panel de Meta del dataset `1002049382950703` mostraba cero actividad hasta el 28/10 y también al seleccionar «Hoy: 29 oct 2026»; Diagnóstico mostraba «No hay errores en este momento». Ni ese diagnóstico vacío ni la inclusión del SDK prueban recepción. La comprobación posterior que sigue confirmó la recepción efectiva.
+
+
+### Evidencia final de recepción (29/10, 20:49–20:51 Colombia)
+
+- Despliegue `dpl_DRjkNC71AK9uNzLmeMe39fMNo6Qg`, commit `8b87d3f`, READY. Bundle publicado `index-Cn6hYISB.js`: contiene `G-PTJVQQ1KM2` y el píxel `1002049382950703`, sin `G-LZQ06TMWJ0`. Verificación Redis del build correcta; sin errores/fatales en los logs consultados.
+- 48 unitarias/API y 36 E2E correctas; build correcto. Después del despliegue, A/escritorio/Cali y B/móvil/Bogotá guardaron dos registros ficticios con `test=1` (HTTP 200), sin solicitudes a proveedores, errores de página o desbordamiento. No se modificó el código del formulario ni de la landing.
+- El usuario autorizó una única visita sin `test=1`, aceptando ambas categorías, **sin rellenar ni enviar el formulario**. Se abrió desde «Probar eventos» de Meta con `variant=a&utm_source=qa&utm_medium=diagnostico&utm_campaign=diagnostico_tecnico` y se cerró tras verificar recepción.
+- Google, propiedad `561084377`: Tiempo real pasó de cero a **1 usuario activo**, **1 `page_view`**, `first_visit` y `session_start`. Se confirmó recepción, no solo carga del SDK. El estado posterior del aviso de administración no se volvió a comprobar.
+- Meta, dataset `1002049382950703`: «Recibiendo actividad moni-sigma-eight.vercel.app» y **`PageView` → Procesado**, navegador/configuración manual, recibido a las **20:49:34**. El panel lo rotula «Evento personalizado»; esta evidencia confirma recepción de visita, no conversiones ni optimización publicitaria por registros.
+- **Excluir del análisis** la campaña `diagnostico_tecnico` / fuente `qa` y esta sesión técnica. En Meta la categoría financiera puede eliminar parámetros de URL; usar también la hora y el contexto «Probar eventos». No borrar registros del estudio. Esta autorización no cambia la regla general `test=1`.
+- Capturas locales privadas: `.qa/measurement/ga4-received-2026-10-29.jpg` y `.qa/measurement/meta-received-2026-10-29.jpg`. Mantenerlas fuera del repositorio público.
+
+El cambio fue de configuración del destino, no una segunda instalación de la etiqueta. No hubo cambios en consentimiento, retención, deduplicación, producto, CAPI, campañas o presupuestos.
