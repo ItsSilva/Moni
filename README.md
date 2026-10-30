@@ -750,7 +750,7 @@ No ejecutar ese procedimiento solo para demostrar que funciona con contactos rea
 
 ## 18. GA4 y Meta: medición opcional
 
-Actualizado el 29/10/2026: GA4 usa `G-LZQ06TMWJ0`, suministrado por la compañera responsable de analíticas; sustituye a `G-PTJVQQ1KM2`. La captura aportada por el usuario el 29/10 identifica cuenta `413978908`, propiedad `561416665` y flujo `16231236814`, con medición mejorada desactivada en esa captura; no atribuirle la propiedad anterior `561084377`. No se ha confirmado recepción en su panel. Meta conserva `1002049382950703` (portfolio «Moni Bank» `2541299039710328`). La guía completa para el equipo y futuras IA está en [docs/measurement-setup.md](docs/measurement-setup.md).
+Decisión final del usuario el 29/10/2026: GA4 usa **`G-PTJVQQ1KM2`**, cuenta `413709066`, propiedad `561084377`, flujo `16222575128`. Se restaura este destino único porque es la propiedad accesible al equipo y la que está consultando el usuario. `G-LZQ06TMWJ0` (cuenta `413978908`, propiedad `561416665`, flujo `16231236814`) se había configurado por solicitud anterior de la compañera; no restaurarlo sin una nueva decisión explícita ni instalar ambas etiquetas. Meta conserva `1002049382950703` (portfolio «Moni Bank» `2541299039710328`). La guía completa para el equipo y futuras IA está en [docs/measurement-setup.md](docs/measurement-setup.md).
 
 ### 18.1 Alcance vigente
 
@@ -766,7 +766,7 @@ Quien rechaza o bloquea las etiquetas queda fuera de los terceros. Las negativas
 
 ### 18.3 Configuración y código
 
-`VITE_GA4_MEASUREMENT_ID=G-LZQ06TMWJ0` está en Production, Preview y Development por solicitud del usuario (29/10). Solo Production recibe `VITE_MEASUREMENT_ENABLED=true`, `VITE_MEASUREMENT_HOST=moni-sigma-eight.vercel.app` y `VITE_META_PIXEL_ID`. El ID por sí solo no activa analíticas en Preview/Development; se conservan consentimiento y exclusión de `test`. Requiere redeploy. Los IDs son públicos; nunca añadir tokens bajo `VITE_`.
+`VITE_GA4_MEASUREMENT_ID=G-PTJVQQ1KM2` está en Production, Preview y Development por solicitud del usuario (29/10). Solo Production recibe `VITE_MEASUREMENT_ENABLED=true`, `VITE_MEASUREMENT_HOST=moni-sigma-eight.vercel.app` y `VITE_META_PIXEL_ID`. El ID por sí solo no activa analíticas en Preview/Development; se conservan consentimiento y exclusión de `test`. Requiere redeploy. Los IDs son públicos; nunca añadir tokens bajo `VITE_`.
 
 `src/measurement-policy.ts` valida configuración, URL y consentimiento; `src/external-measurement.ts` carga los SDK; `src/MeasurementConsent.tsx` y `src/measurement.css` contienen exclusivamente los controles y aviso opcionales. No conectar estos módulos con `Registration` ni interceptar `/api/lead`. CSP limitada a orígenes concretos; se conserva `check-storage.mjs`. No añadir otra instalación en HTML/GTM.
 
@@ -774,7 +774,7 @@ Quien rechaza o bloquea las etiquetas queda fuera de los terceros. Las negativas
 
 Cualquier parámetro `test` excluye terceros incluso con consentimiento guardado. Preview, hosts ajenos, rutas o parámetros desconocidos también quedan excluidos. UTM sin datos personales y con letras ASCII, números, guion, guion bajo, punto o `~`; usar siempre `variant=a` o `variant=b` explícito en campañas.
 
-Verificados el 29/10: 48 unitarias/API, 36 E2E escritorio/móvil, build, formulario con proveedores bloqueados, rechazo/cambio de preferencia y ausencia de eventos tardíos tras revocación. SDK reales comprobados en localhost con CSP real y eventos interceptados: un evento de visita por proveedor, sin campos del formulario ni errores CSP. **La recepción en paneles aún no está confirmada**; el aviso «recogida no activada» no se declara resuelto solo con una emisión interceptada. Se conserva una única instalación manual mediante `gtag.js` en `src/external-measurement.ts`: el snippet pegado con `G-PTJVQQ1KM2` pertenece al flujo anterior y no debe añadirse al HTML. La variable vigente es `G-LZQ06TMWJ0`; no confundir emisión interceptada con recepción.
+Verificados el 29/10: 48 unitarias/API, 36 E2E escritorio/móvil, build, formulario con proveedores bloqueados, rechazo/cambio de preferencia y ausencia de eventos tardíos tras revocación. SDK reales comprobados en localhost con CSP real y eventos interceptados: un evento de visita por proveedor, sin campos del formulario ni errores CSP. **La recepción en paneles aún no está confirmada**; el aviso «recogida no activada» no se declara resuelto solo con una emisión interceptada. Se conserva una única instalación manual mediante `gtag.js` en `src/external-measurement.ts`, ahora dirigida a `G-PTJVQQ1KM2` mediante Vercel; no añadir otro snippet al HTML. La revisión autenticada encontró el aviso en esta propiedad mientras producción enviaba a la otra. Meta tampoco mostraba actividad, incluyendo el 29/10, y no notificaba errores activos; esto no demuestra recepción correcta.
 
 ### 18.5 Pendientes de conversión y campaña
 

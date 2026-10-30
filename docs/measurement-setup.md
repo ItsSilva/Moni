@@ -6,16 +6,16 @@ Actualizado: 29/10/2026. Alcance vigente: medición de visitas, modal inicial y 
 
 | Servicio | Configuración |
 | --- | --- |
-| Google Analytics | Según captura del usuario del 29/10: cuenta `413978908`, propiedad `561416665`; recepción aún no comprobada |
-| Flujo web | «Moni · Web» `16231236814` según captura; sitio `https://moni-sigma-eight.vercel.app` |
-| GA4 ID público vigente | `G-LZQ06TMWJ0`, suministrado por la compañera el 29/10 |
-| Región de informes | Pendiente de confirmar en la nueva propiedad |
+| Google Analytics | Cuenta «Moni» `413709066`, propiedad «Moni · Landing» `561084377`; recepción aún no comprobada |
+| Flujo web | «Moni · Web» `16222575128`; sitio `https://moni-sigma-eight.vercel.app` |
+| GA4 ID público vigente | **`G-PTJVQQ1KM2`**, destino único confirmado finalmente por Juan el 29/10 |
+| Región de informes | Colombia / COP |
 | Meta portfolio | «Moni Bank» `2541299039710328` |
 | Meta dataset/píxel | «Moni · Landing» `1002049382950703` |
 
 El usuario aceptó los términos de Google y autorizó expresamente la aceptación de las condiciones de Meta. No se crearon campañas, presupuestos, CAPI ni credenciales. La cuenta publicitaria personal mostrada en Meta no se asoció por inferencia al portfolio.
 
-Histórico de Google (28/10): cuenta «Moni» `413709066`, propiedad «Moni · Landing» `561084377`, flujo «Moni · Web» `16222575128`, ID `G-PTJVQQ1KM2`, Colombia/COP. Allí se desactivó la medición mejorada, incluida la automática de formularios, y se desmarcaron las opciones de compartir datos. Estos ajustes no se trasladan por cambiar el ID en Vercel. La captura aportada el 29/10 muestra medición mejorada desactivada en `G-LZQ06TMWJ0`; la prueba con su SDK real no emitió formularios ni visitas duplicadas. Las opciones de compartir datos de la cuenta nueva no se inspeccionaron. Meta: categoría «Servicio financiero», coincidencias avanzadas automáticas desactivadas y seguimiento automático de eventos sin código desactivado. No retirar las restricciones de categoría para obtener más datos.
+La propiedad vigente se creó el 28/10 con medición mejorada desactivada (incluida la automática de formularios) y sin compartir datos opcionales. La revisión autenticada del 29/10 confirmó que la medición mejorada sigue desactivada. Temporalmente se configuró `G-LZQ06TMWJ0` por solicitud de la compañera: cuenta `413978908`, propiedad `561416665`, flujo `16231236814`. El usuario confirmó después volver a `G-PTJVQQ1KM2` al descubrir que estaba consultando otra propiedad; no alternar IDs ni duplicar instalaciones. Cambiar el ID no traslada datos históricos entre propiedades. Meta: categoría «Servicio financiero», coincidencias avanzadas automáticas desactivadas y seguimiento automático de eventos sin código desactivado. No retirar las restricciones de categoría para obtener más datos.
 
 ## Qué mide cada sistema
 
@@ -41,7 +41,7 @@ Variables públicas en **Production**:
 ```text
 VITE_MEASUREMENT_ENABLED=true
 VITE_MEASUREMENT_HOST=moni-sigma-eight.vercel.app
-VITE_GA4_MEASUREMENT_ID=G-LZQ06TMWJ0
+VITE_GA4_MEASUREMENT_ID=G-PTJVQQ1KM2
 VITE_META_PIXEL_ID=1002049382950703
 ```
 
@@ -76,10 +76,16 @@ Evidencias locales privadas en `.qa/measurement/` y `test-results/`; no publicar
 
 Referencias: [consentimiento de Google](https://developers.google.com/tag-platform/security/guides/consent), [CSP de Google](https://developers.google.com/tag-platform/security/guides/csp), [Meta Pixel](https://developers.facebook.com/docs/meta-pixel/). La documentación de Meta devolvió 429 durante esta sesión; el código y los ajustes se comprobaron en Events Manager y con su SDK oficial.
 
-## Diagnóstico del aviso de Google (29/10)
+## Diagnóstico inicial del aviso de Google (29/10, antes de confirmar el destino definitivo)
 
 La etiqueta ya existía y Vercel contenía `G-LZQ06TMWJ0`. El snippet pegado en el chat apuntaba al flujo anterior `G-PTJVQQ1KM2`, distinto al de la captura. No añadirlo: produciría medición en otra propiedad y una segunda instalación sin el consentimiento existente.
 
 El aviso anterior al pie de página requería que las personas llegaran hasta él y aceptaran. Esto puede explicar ausencia de tráfico consentido, pero no demuestra la causa exclusiva del aviso de Google. Se sustituyó por un modal inicial. La comprobación con SDK oficial observó una solicitud `g/collect` con `tid=G-LZQ06TMWJ0` y `en=page_view`, después de aceptar, sin errores de consola/CSP; solicitudes interceptadas antes del proveedor. Sin aceptar, al rechazar y con `test` no se carga Google.
 
 Para confirmar recepción, la responsable debe consultar Tiempo real del flujo correcto durante tráfico real consentido. Las visitas de QA del equipo siguen con `test=1` y no aparecerán en Google. No quitar ese parámetro para fabricar resultados ni declarar que el mensaje del panel desapareció sin verlo. Las decisiones previas se respetan; se pueden cambiar en el footer. Las campañas deben usar enlaces explícitos de variante y UTM admitidos por `measurement-policy.ts`.
+
+## Corrección del destino único (29/10, decisión posterior)
+
+La nueva captura y la sesión autenticada mostraron el aviso en `G-PTJVQQ1KM2`, mientras Vercel y el JavaScript publicado contenían únicamente `G-LZQ06TMWJ0`. La sesión no tenía acceso a la propiedad de este último. Ante la discrepancia, Juan confirmó expresamente: «Usar G-PTJVQQ1KM2, la propiedad de mi captura». Se actualizó la variable en los tres entornos; se requiere reconstruir producción para incorporarla al bundle. No hay cambios de formulario, SDK, consentimiento o infraestructura de almacenamiento.
+
+Panel del equipo: [Moni · Landing / Moni · Web](https://analytics.google.com/analytics/web/#/a413709066p561084377/admin/streams/table/16222575128). El panel de Meta del dataset `1002049382950703` mostraba cero actividad hasta el 28/10 y también al seleccionar «Hoy: 29 oct 2026»; Diagnóstico mostraba «No hay errores en este momento». Ni ese diagnóstico vacío ni la inclusión del SDK prueban recepción. La recepción efectiva sigue pendiente de tráfico consentido o de una prueba diagnóstica expresamente autorizada, separada de los resultados del estudio.
